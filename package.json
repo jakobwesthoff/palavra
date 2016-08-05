@@ -1,8 +1,8 @@
 {
-  "name": "redux-chrome-extension",
-  "version": "1.1.0",
-  "author": "Ladislav Maxa <ladislavmaxa@outlook.com> (https://github.com/Dharmoslap)",
-  "license": "ISC",
+  "name": "palavra",
+  "version": "1.0.0",
+  "author": "Jakob Westhoff <jakob@westhoffswelt.de> (http://westhoffswelt.de)",
+  "license": "MIT",
   "scripts": {
     "gulp": "gulp",
     "clean": "rimraf dist",
