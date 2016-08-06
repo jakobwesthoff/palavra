@@ -7,7 +7,7 @@
     "scripts": [
       "Library/Event.js"
     ],
-    "persistent": false
+    "persistent": true
   },
   "chrome_url_overrides": {
     "newtab": "Pages/NewTab.html"
