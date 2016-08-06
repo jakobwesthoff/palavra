@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Palavra",
+  "description": "A newtab page replacement providing a useful space to take notes in markdown",
+  "version": "1.0.0",
+  "background": {
+    "scripts": [
+      "Library/Event.js"
+    ],
+    "persistent": false
+  },
+  "chrome_url_overrides": {
+    "newtab": "Pages/NewTab.html"
+  }
+}
