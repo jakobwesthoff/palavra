@@ -29,6 +29,22 @@ class SimpleMDEComponent extends Component {
       status: false,
       toolbar: false,
       forceSync: false,
+      shortcuts: {
+        'toggleBlockquote': null,
+        'toggleBold': null,
+        'cleanBlock': null,
+        'toggleHeadingSmaller': null,
+        'toggleItalic': null,
+        'drawLink': null,
+        'toggleUnorderedList': null,
+        'togglePreview': null,
+        'toggleCodeBlock': null,
+        'drawImage': null,
+        'toggleOrderedList': null,
+        'toggleHeadingBigger': null,
+        'toggleSideBySide': null,
+        'toggleFullScreen': null,
+      },
     };
 
     const priorityOptions = {
