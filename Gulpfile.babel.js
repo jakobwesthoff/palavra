@@ -100,7 +100,7 @@ gulp.task('eslint', () => {
 gulp.task('watch', ['default'], next => { // eslint-disable-line no-unused-vars
   chokidarWatchRun('Pages/**/*', 'copy:pages');
   chokidarWatchRun('manifest.json', 'copy:manifest');
-  chokidarWatchRun('Application/**/*', 'webpack');
+  chokidarWatchRun(['webpack.config.js', 'Application/**/*'], 'webpack');
   chokidarWatchRun('Styles/**/*', 'sass');
 });
 
