@@ -1,0 +1,19 @@
+{
+  "name": "palavra-chrome-extension",
+  "version": "1.0.0",
+  "description": "A newtab page replacement providing a useful space to take notes in markdown",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "markdown",
+    "newtab",
+    "editor",
+    "notes"
+  ],
+  "author": "Jakob Westhoff <jakob@westhoffswelt.de> (http://westhoffswelt.de)",
+  "license": "ISC"
+}
