@@ -23,6 +23,10 @@ class SimpleMDEComponent extends Component {
     value: "",
   };
 
+  handleDocumentBodyClicked = event => {
+    this.state.simplemde.codemirror.focus();
+  };
+
   componentDidMount() {
     const defaultOptions = {
       spellChecker: false,
@@ -63,6 +67,12 @@ class SimpleMDEComponent extends Component {
     });
 
     this.setState({simplemde});
+
+    document.addEventListener('click', this.handleDocumentBodyClicked);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleDocumentBodyClicked);
   }
 
   componentWillReceiveProps(nextProps) {
