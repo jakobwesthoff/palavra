@@ -1,0 +1,30 @@
+/* Reference: https://gist.github.com/mfornos/9991865
+
+-----------------------------------
+Emoji - natural display for the web
+-----------------------------------
+
+These font face definitions allows to display emoji glyphs intermingled with
+arbitrary characters outside emoji unicode blocks.
+
+Known Limitations
+-----------------
+
+- See https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-range
+  for unicode-range CSS descriptor compatibility.
+
+Have fun!
+*/
+
+@font-face {
+  font-family: 'emoji fix';
+
+  src: local('Apple Color Emoji'),
+  local('Android Emoji'),
+  local('Segoe UI'),
+  local(EmojiSymbols),
+  local(Symbola);
+
+  /* Emoji unicode blocks */
+  unicode-range: U+1F300-1F5FF, U+1F600-1F64F, U+1F680-1F6FF, U+2600-26FF;
+}

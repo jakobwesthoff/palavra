@@ -1,16 +1,21 @@
 @import "reset";
 @import "open-sans";
+@import "emoji-fix";
 @import "../node_modules/simplemde/dist/simplemde.min";
 
 body {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "emoji fix", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
 }
 
+.editor-container {
+  margin: 2rem 0;
+}
+
 .CodeMirror {
   margin: 0 auto;
-  border: 5px solid goldenrod;
+  border: none;
   border-radius: 0;
   height: auto;
   max-width: 980px;
