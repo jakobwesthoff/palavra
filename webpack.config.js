@@ -12,7 +12,7 @@ export const webpackConfig = {
 
   resolve: {
     extensions: ['', '.js', '.json'],
-    modulesDirectories: ['node_modules']
+    modulesDirectories: ['node_modules', 'Application']
   },
 
   module: {

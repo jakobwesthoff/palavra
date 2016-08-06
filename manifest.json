@@ -11,5 +11,8 @@
   },
   "chrome_url_overrides": {
     "newtab": "Pages/NewTab.html"
-  }
+  },
+  "permissions": [
+    "storage"
+  ]
 }
