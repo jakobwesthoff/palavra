@@ -1,17 +1,14 @@
-import {EXTENSION_ERROR} from 'Actions/Error';
+import {extensionError} from 'Actions/Error';
+import {markdownUpdated} from 'Actions/Markdown';
 
 export const markdownUpdate = action => dispatch => {
   chrome.storage.local.set({
     markdown: action.payload
   }, () => {
-    if (runtime.lastError !== undefined) {
-      dispatch({
-        type: EXTENSION_ERROR,
-        payload: runtime.lastError,
-      });
+    if (chrome.runtime.lastError !== undefined) {
+      dispatch(extensionError(chrome.runtime.lastError));
       return;
     }
-
-    dispatch(action);
+    dispatch(markdownUpdated(action.payload));
   })
 };

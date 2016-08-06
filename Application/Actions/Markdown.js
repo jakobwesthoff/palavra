@@ -6,4 +6,7 @@ export const markdownUpdate = markdown => ({
     payload: markdown
 });
 
-
+export const markdownUpdated = markdown => ({
+    type: MARKDOWN_UPDATED,
+    payload: markdown
+});

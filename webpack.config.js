@@ -16,6 +16,8 @@ export const webpackConfig = {
     modulesDirectories: ['node_modules', 'Application']
   },
 
+  node: { fs: 'empty' },
+
   module: {
     loaders: [
       {
