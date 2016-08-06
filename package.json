@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "lodash.debounce": "^4.0.7",
+    "open-sans-fontface": "^1.4.0",
     "react": "^15.3.0",
     "react-chrome-redux": "0.0.8",
     "react-dom": "^15.3.0",

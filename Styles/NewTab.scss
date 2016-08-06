@@ -1,6 +1,12 @@
 @import "reset";
+@import "open-sans";
 @import "../node_modules/simplemde/dist/simplemde.min";
 
+body {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
 
 .CodeMirror {
   margin: 0 auto;

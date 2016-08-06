@@ -46,7 +46,14 @@ gulp.task('copy:manifest', () => {
     .pipe(gulp.dest('./Distribution/'));
 });
 
-gulp.task('copy', ['copy:pages', 'copy:manifest']);
+gulp.task('copy:fonts:open-sans', () => {
+  return gulp.src('node_modules/open-sans-fontface/fonts/**/*')
+    .pipe(gulp.dest('./Distribution/Fonts/OpenSans/'));
+});
+
+gulp.task('copy:fonts', ['copy:fonts:open-sans']);
+
+gulp.task('copy', ['copy:pages', 'copy:manifest', 'copy:fonts']);
 
 gulp.task('webpack', next => {
   webpack(webpackConfig, (err, stats) => {
