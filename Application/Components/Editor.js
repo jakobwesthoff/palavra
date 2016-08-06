@@ -8,6 +8,7 @@ import SimpleMDE from 'Components/SimpleMDE';
 class Editor extends Component {
   static propTypes = {
     value: React.PropTypes.string.isRequired,
+    dispatch: React.PropTypes.func.isRequired,
   };
 
   handleMarkdownChanged = newMarkdown => {

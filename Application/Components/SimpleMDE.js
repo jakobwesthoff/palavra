@@ -1,5 +1,6 @@
+/* global document */
+
 import React, {Component} from 'react';
-import {markdownUpdate} from 'Actions/Markdown';
 import SimpleMDE from 'simplemde';
 
 class SimpleMDEComponent extends Component {
@@ -7,23 +8,24 @@ class SimpleMDEComponent extends Component {
     super(props);
 
     this.state = {
-      currentEditorValue: props.value
+      currentEditorValue: props.value,
     };
   }
 
   static propTypes = {
     onChange: React.PropTypes.func,
     value: React.PropTypes.string,
+    options: React.PropTypes.object,
   };
 
   static defaultProps = {
     onChange: () => {
       // noop
     },
-    value: "",
+    value: '',
   };
 
-  handleDocumentBodyClicked = event => {
+  handleDocumentBodyClicked = () => {
     this.state.simplemde.codemirror.focus();
   };
 
@@ -34,6 +36,7 @@ class SimpleMDEComponent extends Component {
       toolbar: false,
       forceSync: false,
       shortcuts: {
+        /* eslint-disable quote-props */
         'toggleBlockquote': null,
         'toggleBold': null,
         'cleanBlock': null,
@@ -48,6 +51,7 @@ class SimpleMDEComponent extends Component {
         'toggleHeadingBigger': null,
         'toggleSideBySide': null,
         'toggleFullScreen': null,
+        /* eslint-enable */
       },
     };
 

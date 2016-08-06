@@ -14,5 +14,5 @@ const store = createStore(
 );
 
 wrapStore(store, {
-  portName: 'Palavra'
+  portName: 'Palavra',
 });
