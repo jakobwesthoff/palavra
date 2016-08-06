@@ -3,6 +3,7 @@ import path from 'path';
 export const webpackConfig = {
   entry: {
     'Event': './Application/Event.js',
+    'NewTab': './Application/NewTab.js',
   },
 
   output: {
