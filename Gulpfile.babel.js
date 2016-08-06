@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies, arrow-body-style */
+
 import gulp from 'gulp';
 import loadPlugins from 'gulp-load-plugins';
 import webpack from 'webpack';
@@ -6,6 +8,7 @@ import run from 'run-sequence';
 import chokidar from 'chokidar';
 import mkdirp from 'mkdirp-promise';
 import beepbeep from 'beepbeep';
+import chalk from 'chalk';
 import {webpackConfig} from './webpack.config.js';
 
 const plugins = loadPlugins();
@@ -18,7 +21,7 @@ function chokidarWatch(glob, fn) {
 }
 
 function chokidarWatchRun(glob, ...targets) {
-  chokidarWatch(glob, (event, filepath) => run(...targets));
+  chokidarWatch(glob, () => run(...targets));
 }
 
 gulp.task('clean', next => {
@@ -84,7 +87,17 @@ gulp.task('build', next => run(
   next
 ));
 
-gulp.task('watch', ['default'], () => {
+gulp.task('eslint', () => {
+  return gulp.src([
+    'Gulpfile.babel.js',
+    'Application/**/*.js',
+  ])
+    .pipe(plugins.eslint())
+    .pipe(plugins.eslint.format())
+    .pipe(plugins.eslint.failAfterError());
+});
+
+gulp.task('watch', ['default'], next => { // eslint-disable-line no-unused-vars
   chokidarWatchRun('Pages/**/*', 'copy:pages');
   chokidarWatchRun('manifest.json', 'copy:manifest');
   chokidarWatchRun('Application/**/*', 'webpack');
