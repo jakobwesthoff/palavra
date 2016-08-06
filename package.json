@@ -46,6 +46,7 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.7",
     "react": "^15.3.0",
     "react-chrome-redux": "0.0.8",
     "react-dom": "^15.3.0",

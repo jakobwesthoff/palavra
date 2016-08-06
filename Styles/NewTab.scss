@@ -1,5 +1,9 @@
+@import "reset";
 @import "../node_modules/simplemde/dist/simplemde.min";
 
-h1 {
-  color: goldenrod;
+.CodeMirror {
+  border: 5px solid goldenrod;
+  border-radius: 0;
+  height: auto;
+  min-height: inherit;
 }

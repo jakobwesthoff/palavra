@@ -6,10 +6,7 @@ import Editor from 'Components/Editor';
 class Palavra extends Component {
   render() {
     return (
-      <div>
-        <h1>Palavra Application</h1>
-        <Editor />
-      </div>
+      <Editor />
     );
   }
 }

@@ -11,7 +11,6 @@ class Editor extends Component {
   };
 
   handleMarkdownChanged = newMarkdown => {
-    console.log("changed: ", newMarkdown);
     this.props.dispatch(markdownUpdate(newMarkdown));
   };
 

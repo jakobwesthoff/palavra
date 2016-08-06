@@ -1,7 +1,8 @@
+import debounce from 'lodash.debounce';
 import {extensionError} from 'Actions/Error';
 import {markdownUpdated} from 'Actions/Markdown';
 
-export const markdownUpdate = action => dispatch => {
+const markdownUpdatedDebounced = debounce((action, dispatch) => {
   chrome.storage.local.set({
     markdown: action.payload
   }, () => {
@@ -11,4 +12,6 @@ export const markdownUpdate = action => dispatch => {
     }
     dispatch(markdownUpdated(action.payload));
   })
-};
+}, 500);
+
+export const markdownUpdate = action => dispatch => markdownUpdatedDebounced(action, dispatch);

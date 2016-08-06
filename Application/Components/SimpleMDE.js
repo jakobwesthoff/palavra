@@ -38,6 +38,7 @@ class SimpleMDEComponent extends Component {
     const simplemde = new SimpleMDE(
       Object.assign({}, defaultOptions, this.props.options, priorityOptions)
     );
+    simplemde.codemirror.setOption('viewportMargin', Infinity);
     simplemde.value(this.props.value);
     simplemde.codemirror.on('change', () => {
       const value = simplemde.value();
