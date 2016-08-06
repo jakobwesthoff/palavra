@@ -73,7 +73,7 @@ class SimpleMDEComponent extends Component {
 
   render() {
     return (
-      <div ref="editor">
+      <div ref="editor" className="editor-container">
         <textarea ref="textarea" />
       </div>
     );

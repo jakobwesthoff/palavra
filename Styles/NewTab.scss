@@ -1,9 +1,15 @@
 @import "reset";
 @import "../node_modules/simplemde/dist/simplemde.min";
 
+
 .CodeMirror {
+  margin: 0 auto;
   border: 5px solid goldenrod;
   border-radius: 0;
   height: auto;
+  max-width: 980px;
+}
+
+.CodeMirror, .CodeMirror-scroll {
   min-height: inherit;
 }
