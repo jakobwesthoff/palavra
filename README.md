@@ -10,5 +10,5 @@ with all the needed functionality to easily take notes. Palavra is inspired by
 ## Acknoledgements
 
 - Thanks go to [Papier](https://getpapier.com/) for the initial idea, as well as some month of proper service.
-- Thanks to [redux-chrome-extension](https://github.com/Dharmoslap/redux-chrome-extension) which provided the redux/react basis for this project.
+- Thanks to [react-chrome-redux](https://github.com/tshaddix/react-chrome-redux) which is the basis for synching between tabs.
 - Thanks to [simplemde](https://simplemde.com/) which is the markdown editor used within this extension.
