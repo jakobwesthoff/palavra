@@ -9,8 +9,9 @@ with all the needed functionality to easily take notes. Palavra is inspired by
 
 ## Chrome-Web-Store
 
-**Currently this extension is not yet published on the chrome-web-store. I plan
-on doing this shortly**
+The extension is available on the
+[Google-Web-Store](https://chrome.google.com/webstore/detail/palavra/pimddpppppkfioifalgbhnjfmlcmfehd)
+for installation.
 
 ## Acknoledgements
 
