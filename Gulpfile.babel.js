@@ -32,6 +32,8 @@ gulp.task('prepare:directories', () => Promise.all([
   mkdirp('Distribution'),
   mkdirp('Distribution/Library'),
   mkdirp('Distribution/Pages'),
+  mkdirp('Distribution/Fonts'),
+  mkdirp('Distribution/Assets'),
 ]));
 
 gulp.task('prepare', ['prepare:directories']);
@@ -53,7 +55,16 @@ gulp.task('copy:fonts:open-sans', () => {
 
 gulp.task('copy:fonts', ['copy:fonts:open-sans']);
 
-gulp.task('copy', ['copy:pages', 'copy:manifest', 'copy:fonts']);
+gulp.task('copy:assets:icons', () => {
+  return gulp.src([
+    'Assets/icon-rounded-*.png',
+  ])
+    .pipe(gulp.dest('./Distribution/Assets/'));
+});
+
+gulp.task('copy:assets', ['copy:assets:icons']);
+
+gulp.task('copy', ['copy:pages', 'copy:manifest', 'copy:fonts', 'copy:assets']);
 
 gulp.task('webpack', next => {
   webpack(webpackConfig, (err, stats) => {
