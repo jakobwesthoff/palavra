@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Palavra",
   "description": "A newtab page replacement providing an editor to take notes in markdown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icons": {
     "16": "Assets/icon-rounded-16.png",
     "32": "Assets/icon-rounded-32.png",

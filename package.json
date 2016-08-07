@@ -1,7 +1,7 @@
 {
   "name": "palavra-chrome-extension",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A newtab page replacement providing a useful space to take notes in markdown",
   "main": "index.js",
   "scripts": {
