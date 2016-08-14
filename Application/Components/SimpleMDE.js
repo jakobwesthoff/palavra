@@ -33,6 +33,14 @@ class SimpleMDEComponent extends Component {
     },
   };
 
+  handleVisibilityChanged = () => {
+    const {simplemde} = this.state;
+    if (document.hidden !== true) {
+      simplemde.codemirror.focus();
+    }
+  };
+
+
   handleDocumentBodyClicked = () => {
     this.state.simplemde.codemirror.focus();
   };
@@ -104,10 +112,12 @@ class SimpleMDEComponent extends Component {
     this.setState({simplemde});
 
     document.addEventListener('click', this.handleDocumentBodyClicked);
+    document.addEventListener('visibilitychange', this.handleVisibilityChanged);
   }
 
   componentWillUnmount() {
     document.removeEventListener('click', this.handleDocumentBodyClicked);
+    document.removeEventListener('visibilitychange', this.handleVisibilityChanged);
   }
 
   componentWillReceiveProps(nextProps) {
