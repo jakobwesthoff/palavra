@@ -76,7 +76,7 @@ gulp.task('webpack', next => {
       throw new plugins.util.PluginError('webpack', err);
     }
 
-    plugins.util.log('[webpack]', stats.toString());
+    plugins.util.log('[webpack]', stats.toString({colors: true}));
     next();
   });
 });
@@ -86,7 +86,7 @@ gulp.task('webpack:watch', next => {
   const compiler = webpack(webpackConfig);
   webpackWatcherState = {};
   webpackWatcherState.next = next;
-  console.log(chalk.blue('Webpack build started.')); // eslint-disable-line no-console
+  plugins.util.log(chalk.blue('Webpack build started.'));
   webpackWatcherState.watcher = compiler.watch({
     aggregateTimeout: 300,
   }, (err, stats) => {
@@ -94,8 +94,13 @@ gulp.task('webpack:watch', next => {
       throw new plugins.util.PluginError('webpack', err);
     }
 
-    plugins.util.log('[webpack]', stats.toString());
-    console.log(chalk.blue('Webpack build finished')); // eslint-disable-line no-console
+    plugins.util.log(stats.toString({
+      colors: true,
+      version: false,
+      timings: true,
+      chunks: false,
+    }));
+    plugins.util.log(chalk.blue('Webpack build finished'));
   });
 });
 
