@@ -107,7 +107,7 @@ gulp.task('webpack:watch', next => {
 gulp.task('sass', () => {
   return gulp.src(['Styles/**/*.{scss,sass}', '!Styles/**/_*.{scss,sass}'])
     .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.plumber(error => {
+    .pipe(plugins.plumber(function(error) { // We need a this bindable function here
       beepbeep();
       console.error(chalk.red('Error compiling Sass file.')); // eslint-disable-line no-console
       console.error(chalk.red(error.message)); // eslint-disable-line no-console
