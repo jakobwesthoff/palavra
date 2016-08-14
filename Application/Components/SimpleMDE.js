@@ -2,19 +2,25 @@
 
 import React, {Component} from 'react';
 import SimpleMDE from 'simplemde';
+import isEqual from 'lodash.isequal';
 
 class SimpleMDEComponent extends Component {
   constructor(props) {
     super(props);
 
+    this._changedByUser = false;
+
     this.state = {
-      currentEditorValue: props.value,
+      lastValue: props.value,
+      lastCursorPosition: props.cursorPosition,
     };
   }
 
   static propTypes = {
+    value: React.PropTypes.string.isRequired,
+    cursorPosition: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func,
-    value: React.PropTypes.string,
+    onCursorChange: React.PropTypes.func,
     options: React.PropTypes.object,
   };
 
@@ -22,11 +28,34 @@ class SimpleMDEComponent extends Component {
     onChange: () => {
       // noop
     },
-    value: '',
+    onCursorChange: () => {
+      // noop
+    },
   };
 
   handleDocumentBodyClicked = () => {
     this.state.simplemde.codemirror.focus();
+  };
+
+  handleEditorKeyUpOrMouseUp = () => {
+    const {simplemde, lastCursorPosition, lastValue} = this.state;
+
+    this._changedByUser = true;
+
+    const value = simplemde.value();
+    if (lastValue !== value) {
+      this.props.onChange(value);
+    }
+
+    const cursorPosition = simplemde.codemirror.getCursor('head');
+    if (!isEqual(lastCursorPosition, cursorPosition)) {
+      this.props.onCursorChange(cursorPosition);
+    }
+
+    this.setState({
+      lastValue: value,
+      lastCursorPosition: cursorPosition,
+    });
   };
 
   componentDidMount() {
@@ -64,11 +93,13 @@ class SimpleMDEComponent extends Component {
     );
     simplemde.codemirror.setOption('viewportMargin', Infinity);
     simplemde.value(this.props.value);
-    simplemde.codemirror.on('change', () => {
-      const value = simplemde.value();
-      this.setState({currentEditorValue: value});
-      this.props.onChange(value);
-    });
+
+    /*
+     * The events on the editor container are fired AFTER the internal
+     * codemirror has handled the event, which makes them ideal for our purposes.
+     */
+    this.refs.editor.addEventListener('keyup', this.handleEditorKeyUpOrMouseUp, false);
+    this.refs.editor.addEventListener('mouseup', this.handleEditorKeyUpOrMouseUp, false);
 
     this.setState({simplemde});
 
@@ -80,15 +111,19 @@ class SimpleMDEComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.state.currentEditorValue) {
-      this.state.simplemde.value(nextProps.value);
+    if (this._changedByUser === true) {
+      this._changedByUser = false;
+      return;
     }
+
+    this.state.simplemde.value(nextProps.value);
+    this.state.simplemde.codemirror.setCursor(nextProps.cursorPosition);
   }
 
   render() {
     return (
       <div ref="editor" className="editor-container">
-        <textarea ref="textarea" />
+        <textarea ref="textarea"/>
       </div>
     );
   }
