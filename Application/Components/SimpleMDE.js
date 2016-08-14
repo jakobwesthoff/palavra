@@ -3,25 +3,16 @@
 import React, {Component} from 'react';
 import SimpleMDE from 'simplemde';
 import isEqual from 'lodash.isequal';
+import debounce from 'lodash.debounce';
 
 class SimpleMDEComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this._changedByUser = false;
-
-    this.state = {
-      lastValue: props.value,
-      lastCursorPosition: props.cursorPosition,
-    };
-  }
-
   static propTypes = {
     value: React.PropTypes.string.isRequired,
     cursorPosition: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func,
     onCursorChange: React.PropTypes.func,
     options: React.PropTypes.object,
+    debounce: React.PropTypes.number,
   };
 
   static defaultProps = {
@@ -31,7 +22,22 @@ class SimpleMDEComponent extends Component {
     onCursorChange: () => {
       // noop
     },
+    debounce: 500,
   };
+
+  constructor(props) {
+    super(props);
+
+    this._changedByUser = false;
+
+    this.state = {
+      lastValue: props.value,
+      lastCursorPosition: props.cursorPosition,
+    };
+
+    this.debouncedOnChange = debounce(props.onChange, props.debounce);
+    this.debouncedOnCursorChange = debounce(props.onCursorChange, props.debounce);
+  }
 
   handleVisibilityChanged = () => {
     const {simplemde} = this.state;
@@ -52,12 +58,12 @@ class SimpleMDEComponent extends Component {
 
     const value = simplemde.value();
     if (lastValue !== value) {
-      this.props.onChange(value);
+      this.debouncedOnChange(value);
     }
 
     const cursorPosition = simplemde.codemirror.getCursor('head');
     if (!isEqual(lastCursorPosition, cursorPosition)) {
-      this.props.onCursorChange(cursorPosition);
+      this.debouncedOnCursorChange(cursorPosition);
     }
 
     this.setState({
@@ -121,6 +127,11 @@ class SimpleMDEComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.debounce !== nextProps.debounce) {
+      this.debouncedOnChange = debounce(props.onChange, nextProps.debounce);
+      this.debouncedOnCursorChange = debounce(props.onCursorChange, nextProps.debounce);
+    }
+
     if (this._changedByUser === true) {
       this._changedByUser = false;
       return;
