@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Palavra",
+  "name": "Palavra DEV",
   "description": "A newtab page replacement providing an editor to take notes in markdown",
   "version": "1.0.1",
   "icons": {
