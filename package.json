@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "lodash.debounce": "^4.0.7",
+    "lodash.isequal": "^4.3.1",
     "open-sans-fontface": "^1.4.0",
     "react": "^15.3.0",
     "react-chrome-redux": "0.0.8",
