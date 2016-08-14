@@ -13,12 +13,10 @@ class Editor extends Component {
   };
 
   handleMarkdownChanged = newMarkdown => {
-    console.log('markdown change');
     this.props.dispatch(markdownUpdate(newMarkdown));
   };
 
   handleCursorChanged = newPosition => {
-    console.log(newPosition);
     this.props.dispatch(cursorPositionUpdate(newPosition));
   };
 
