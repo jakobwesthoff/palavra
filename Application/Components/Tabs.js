@@ -1,7 +1,17 @@
 import React, {Component, PropTypes} from 'react';
 
 class Tabs extends Component {
-  static propTypes = {};
+  static propTypes = {
+    onTabActivate: PropTypes.func,
+    reverseOrder: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    onTabActivate: () => {
+      /* noop */
+    },
+    reverseOrder: false,
+  };
 
   constructor(props) {
     super(props);
@@ -16,9 +26,19 @@ class Tabs extends Component {
       return;
     }
 
-    console.log("Tab activated: ", index);
+    this.props.onTabActivate(index);
+
     this.setState({activeTabIndex: index});
   };
+
+  bringChildrenIntoOrder(propsChildren) {
+    const children = React.Children.toArray(propsChildren);
+    if (this.props.reverseOrder === true) {
+      children.reverse();
+    }
+
+    return children;
+  }
 
   renderChild = (child, index) => {
     return React.cloneElement(child, {
@@ -30,7 +50,7 @@ class Tabs extends Component {
   render() {
     return (
       <ul className="tabs">
-        {React.Children.map(this.props.children, this.renderChild)}
+        {this.bringChildrenIntoOrder(this.props.children).map(this.renderChild)}
       </ul>
     );
   }

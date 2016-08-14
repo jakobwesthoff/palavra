@@ -1,12 +1,12 @@
 export const MARKDOWN_UPDATE = 'MARKDOWN_UPDATE';
 export const MARKDOWN_UPDATED = 'MARKDOWN_UPDATED';
 
-export const markdownUpdate = markdown => ({
+export const markdownUpdate = (tabIndex, markdown) => ({
   type: MARKDOWN_UPDATE,
-  payload: markdown,
+  payload: {tabIndex, markdown},
 });
 
-export const markdownUpdated = markdown => ({
+export const markdownUpdated = (tabIndex, markdown) => ({
   type: MARKDOWN_UPDATED,
-  payload: markdown,
+  payload: {tabIndex, markdown},
 });

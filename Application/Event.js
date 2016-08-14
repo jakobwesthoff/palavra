@@ -7,14 +7,14 @@ import {wrapStore, alias} from 'react-chrome-redux';
 import rootReducer from './Reducers';
 import aliases from './Aliases';
 
-chrome.storage.local.get('markdown', storage => {
-  let markdown = '';
+chrome.storage.local.get('markdownByTabs', storage => {
+  let markdownByTabs = {};
   if (chrome.runtime.lastError === undefined) {
-    markdown = storage.markdown;
+    markdownByTabs = storage.markdownByTabs;
   }
   const store = createStore(
     rootReducer,
-    {markdown},
+    {markdownByTabs},
     applyMiddleware(
       alias(aliases),
       thunk
