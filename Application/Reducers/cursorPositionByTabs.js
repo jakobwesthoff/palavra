@@ -8,7 +8,7 @@ const cursorPositionByTabs = (state = initialState, action) => {
   switch (action.type) {
     case CURSOR_POSITION_UPDATE:
       const newState = cloneDeep(state);
-      newState[action.payload.tabIndex] = action.payload.cursorPosition;
+      newState[action.payload.tabIndex] = action.payload.cursorPositionState;
       return newState;
     default:
       return state;

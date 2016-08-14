@@ -1,11 +1,14 @@
 import React, {Component, PropTypes} from 'react';
 
+import ValueState from 'Library/ValueState';
+import CursorPositionState from 'Library/CursorPositionState';
+
 import SimpleMDE from 'Components/SimpleMDE';
 
 class Editor extends Component {
   static propTypes = {
-    value: PropTypes.string.isRequired,
-    cursorPosition: PropTypes.object.isRequired,
+    valueState: React.PropTypes.instanceOf(ValueState).isRequired,
+    cursorPositionState: React.PropTypes.instanceOf(CursorPositionState).isRequired,
     onChange: PropTypes.func,
     onCursorChange: PropTypes.func,
   };
@@ -21,8 +24,8 @@ class Editor extends Component {
 
   render() {
     return (
-      <SimpleMDE value={this.props.value}
-                 cursorPosition={this.props.cursorPosition}
+      <SimpleMDE valueState={this.props.valueState}
+                 cursorPositionState={this.props.cursorPositionState}
                  onChange={this.props.onChange}
                  onCursorChange={this.props.onCursorChange}
       />

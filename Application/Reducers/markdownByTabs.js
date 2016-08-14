@@ -8,7 +8,7 @@ const markdownByTabs = (state = initialState, action) => {
   switch (action.type) {
     case MARKDOWN_UPDATED:
       const newState = cloneDeep(state);
-      newState[action.payload.tabIndex] = action.payload.markdown;
+      newState[action.payload.tabIndex] = action.payload.valueState;
       return newState;
     default:
       return state;

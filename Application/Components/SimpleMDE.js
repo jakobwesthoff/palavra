@@ -1,14 +1,15 @@
 /* global document */
 
 import React, {Component} from 'react';
+import ValueState from 'Library/ValueState';
+import CursorPositionState from 'Library/CursorPositionState';
 import SimpleMDE from 'simplemde';
-import isEqual from 'lodash.isequal';
 import debounce from 'lodash.debounce';
 
 class SimpleMDEComponent extends Component {
   static propTypes = {
-    value: React.PropTypes.string.isRequired,
-    cursorPosition: React.PropTypes.object.isRequired,
+    valueState: React.PropTypes.instanceOf(ValueState).isRequired,
+    cursorPositionState: React.PropTypes.instanceOf(CursorPositionState).isRequired,
     onChange: React.PropTypes.func,
     onCursorChange: React.PropTypes.func,
     options: React.PropTypes.object,
@@ -28,11 +29,11 @@ class SimpleMDEComponent extends Component {
   constructor(props) {
     super(props);
 
-    this._changedByUser = false;
-
     this.state = {
-      lastValue: props.value,
-      lastCursorPosition: props.cursorPosition,
+      lastValueRevision: 0,
+      lastCursorPositionRevision: 0,
+      lastValueState: props.valueState,
+      lastCursorPositionState: props.cursorPositionState,
     };
 
     this.debouncedOnChange = debounce(props.onChange, props.debounce);
@@ -52,23 +53,33 @@ class SimpleMDEComponent extends Component {
   };
 
   handleEditorKeyUpOrMouseUp = () => {
-    const {simplemde, lastCursorPosition, lastValue} = this.state;
-
-    this._changedByUser = true;
+    const {
+      simplemde,
+      lastCursorPositionState,
+      lastCursorPositionRevision,
+      lastValueState,
+      lastValueRevision,
+    } = this.state;
 
     const value = simplemde.value();
-    if (lastValue !== value) {
-      this.debouncedOnChange(value);
+    if (lastValueState.value !== value) {
+      this.setState({lastValueRevision: lastValueRevision + 1});
+      this.debouncedOnChange(new ValueState(value, lastValueRevision + 1));
     }
 
     const cursorPosition = simplemde.codemirror.getCursor('head');
-    if (!isEqual(lastCursorPosition, cursorPosition)) {
-      this.debouncedOnCursorChange(cursorPosition);
+    const {line, ch: character} = cursorPosition;
+    if (
+      lastCursorPositionState.line !== line ||
+      lastCursorPositionState.character !== character
+    ) {
+      this.setState({lastCursorPositionRevision: lastCursorPositionRevision + 1});
+      this.debouncedOnCursorChange(new CursorPositionState(line, character, lastCursorPositionRevision + 1));
     }
 
     this.setState({
-      lastValue: value,
-      lastCursorPosition: cursorPosition,
+      lastValueState: value,
+      lastCursorPositionState: cursorPosition,
     });
   };
 
@@ -127,18 +138,33 @@ class SimpleMDEComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.debounce !== nextProps.debounce) {
-      this.debouncedOnChange = debounce(props.onChange, nextProps.debounce);
-      this.debouncedOnCursorChange = debounce(props.onCursorChange, nextProps.debounce);
+    const {debounce, valueState, cursorPositionState} = nextProps;
+
+    if (this.props.debounce !== debounce) {
+      this.debouncedOnChange = debounce(props.onChange, debounce);
+      this.debouncedOnCursorChange = debounce(props.onCursorChange, debounce);
     }
 
-    if (this._changedByUser === true) {
-      this._changedByUser = false;
-      return;
+    if (this.state.lastValueRevision < valueState.revision) {
+      if (Number.isFinite(valueState.revision)) {
+        this.setState({lastValueRevision: valueState.revision});
+      } else {
+        this.debouncedOnChange(new ValueState(valueState.value, this.state.lastValueRevision + 1));
+        this.setState({lastValueRevision: this.state.lastValueRevision + 1});
+      }
+      this.state.simplemde.value(valueState.value);
     }
 
-    this.state.simplemde.value(nextProps.value);
-    this.state.simplemde.codemirror.setCursor(nextProps.cursorPosition);
+    if (this.state.lastCursorPositionRevision < cursorPositionState.revision) {
+      const {line, character: ch} = cursorPositionState;
+      if (Number.isFinite(cursorPositionState.revision)) {
+        this.setState({lastCursorPositionState: cursorPositionState.revision});
+      } else {
+        this.debouncedOnCursorChange(new CursorPositionState(line, ch, this.state.lastCursorPositionRevision + 1));
+        this.setState({lastCursorPositionState: this.state.lastCursorPositionState + 1});
+      }
+      this.state.simplemde.codemirror.setCursor({line, ch});
+    }
   }
 
   render() {
