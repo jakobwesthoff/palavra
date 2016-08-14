@@ -1,0 +1,23 @@
+$tabBorderColor: goldenrod;
+$tabBackgroundColor: white;
+
+.tabs {
+  border-bottom: 1px solid $tabBorderColor;
+  margin: 0 0 1rem 0;
+
+  .tab {
+    display: inline-block;
+    position: relative;
+    bottom: -1px;
+    border: 1px solid transparent;
+    padding: .3rem .8rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .tab.active {
+    border: 1px solid $tabBorderColor;
+    border-bottom: 1px solid transparent;
+    background: $tabBackgroundColor
+  }
+}
