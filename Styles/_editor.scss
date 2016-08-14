@@ -1,0 +1,15 @@
+.editor-container {
+  margin: 0;
+}
+
+.CodeMirror {
+  margin: 0 auto;
+  border: none;
+  border-radius: 0;
+  height: auto;
+  max-width: 980px;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+  min-height: inherit;
+}
