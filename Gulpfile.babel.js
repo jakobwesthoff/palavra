@@ -21,7 +21,11 @@ function chokidarWatch(glob, fn) {
 }
 
 function chokidarWatchRun(glob, ...targets) {
-  chokidarWatch(glob, () => run(...targets));
+  if (targets.length === 1 && typeof targets[0] === 'function') {
+    chokidarWatch(glob, targets[0]);
+  } else {
+    chokidarWatch(glob, () => run(...targets));
+  }
 }
 
 gulp.task('clean', next => {
@@ -77,6 +81,24 @@ gulp.task('webpack', next => {
   });
 });
 
+let webpackWatcherState = null;
+gulp.task('webpack:watch', next => {
+  const compiler = webpack(webpackConfig);
+  webpackWatcherState = {};
+  webpackWatcherState.next = next;
+  console.log(chalk.blue('Webpack build started.')); // eslint-disable-line no-console
+  webpackWatcherState.watcher = compiler.watch({
+    aggregateTimeout: 300,
+  }, (err, stats) => {
+    if (err) {
+      throw new plugins.util.PluginError('webpack', err);
+    }
+
+    plugins.util.log('[webpack]', stats.toString());
+    console.log(chalk.blue('Webpack build finished')); // eslint-disable-line no-console
+  });
+});
+
 gulp.task('sass', () => {
   return gulp.src(['Styles/**/*.{scss,sass}', '!Styles/**/_*.{scss,sass}'])
     .pipe(plugins.sourcemaps.init())
@@ -105,6 +127,13 @@ gulp.task('build', next => run(
   next
 ));
 
+gulp.task('build:without-webpack', next => run(
+  'clean',
+  'prepare',
+  ['copy', 'sass'],
+  next
+));
+
 gulp.task('eslint', () => {
   return gulp.src([
     'Gulpfile.babel.js',
@@ -115,11 +144,20 @@ gulp.task('eslint', () => {
     .pipe(plugins.eslint.failAfterError());
 });
 
-gulp.task('watch', ['default'], next => { // eslint-disable-line no-unused-vars
+gulp.task('watch', ['build:without-webpack'], next => { // eslint-disable-line no-unused-vars
   chokidarWatchRun('Pages/**/*', 'copy:pages');
   chokidarWatchRun('manifest.json', 'copy:manifest');
-  chokidarWatchRun(['webpack.config.js', 'Application/**/*'], 'webpack');
+  chokidarWatchRun('webpack.config.js', () => {
+    if (webpackWatcherState !== null) {
+      webpackWatcherState.watcher.close(() => {
+        webpackWatcherState = null;
+        webpackWatcherState.next();
+        run('webpack:watch');
+      });
+    }
+  });
   chokidarWatchRun('Styles/**/*', 'sass');
+  run('webpack:watch');
 });
 
 gulp.task('default', ['build']);
