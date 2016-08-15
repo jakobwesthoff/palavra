@@ -11,6 +11,10 @@ chrome.storage.local.get('markdownByTabs', storage => {
   let markdownByTabs = {};
   if (chrome.runtime.lastError === undefined) {
     markdownByTabs = storage.markdownByTabs;
+    // Remove revisions after initial load
+    Object.keys(markdownByTabs).forEach(
+      tabIndex => markdownByTabs[tabIndex].revision = 0
+    );
   }
   const store = createStore(
     rootReducer,

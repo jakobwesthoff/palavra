@@ -1,13 +1,13 @@
 class ValueState {
   static fromJSON = json => {
     let {value, revision} = json;
-    if (revision === null) {
-      revision = Infinity;
+    if (value === undefined || revision === undefined) {
+      throw new Error('Malformed document transformed');
     }
     return new ValueState(value, revision);
   };
 
-  constructor(value = '', revision = Infinity) {
+  constructor(value = '', revision = 0) {
     this.value = value;
     this.revision = revision;
   }

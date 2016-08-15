@@ -1,8 +1,9 @@
 class CursorPositionState {
   static fromJSON = json => {
+    console.log('decoded json: ', json);
     let {line, character, revision} = json;
-    if (revision === null) {
-      revision = Infinity;
+    if (line === undefined || character === undefined || revision === undefined) {
+      throw new Error('Malformed document transformed');
     }
     return new CursorPositionState(
       line,
@@ -11,7 +12,7 @@ class CursorPositionState {
     );
   };
 
-  constructor(line = 0, character = 0, revision = Infinity) {
+  constructor(line = 0, character = 0, revision = 0) {
     this.line = line;
     this.character = character;
     this.revision = revision;

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {tabActivate} from 'Actions/Tabs';
 import {markdownUpdate} from 'Actions/Markdown';
 import {cursorPositionUpdate} from 'Actions/CursorPosition';
+import {revisionValueSet, revisionCursorPositionSet} from 'Actions/Revision';
 
 import ValueState from 'Library/ValueState';
 import CursorPositionState from 'Library/CursorPositionState';
@@ -23,9 +24,19 @@ class Palavra extends Component {
     dispatch(markdownUpdate(activeTab, newValueState.toJSON()));
   };
 
+  handleValueRevisionChanged = newRevision => {
+    const {dispatch} = this.props;
+    dispatch(revisionValueSet(newRevision));
+  };
+
   handleCursorPositionChanged = newPositionState => {
     const {dispatch, activeTab} = this.props;
     dispatch(cursorPositionUpdate(activeTab, newPositionState.toJSON()));
+  };
+
+  handleCursorPositionRevisionChanged = newRevision => {
+    const {dispatch} = this.props;
+    dispatch(revisionCursorPositionSet(newRevision));
   };
 
 
@@ -40,8 +51,10 @@ class Palavra extends Component {
         </Tabs>
         <Editor valueState={this.props.valueState}
                 cursorPositionState={this.props.cursorPositionState}
-                onChange={this.handleValueChanged}
-                onCursorChange={this.handleCursorPositionChanged}
+                onValueChange={this.handleValueChanged}
+                onValueRevisionChange={this.handleValueRevisionChanged}
+                onCursorPositionChange={this.handleCursorPositionChanged}
+                onCursorPositionRevisionChange={this.handleCursorPositionRevisionChanged}
         />
       </div>
     );
@@ -52,8 +65,6 @@ const mapStateToProps = state => {
   const {activeTab, markdownByTabs, cursorPositionByTabs} = state;
   let valueState = new ValueState();
   let cursorPositionState = new CursorPositionState();
-
-  console.log('mapping: ', activeTab, markdownByTabs[activeTab], markdownByTabs);
 
   if (markdownByTabs[activeTab] !== undefined) {
     valueState = ValueState.fromJSON(markdownByTabs[activeTab]);

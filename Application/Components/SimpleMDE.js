@@ -10,17 +10,25 @@ class SimpleMDEComponent extends Component {
   static propTypes = {
     valueState: React.PropTypes.instanceOf(ValueState).isRequired,
     cursorPositionState: React.PropTypes.instanceOf(CursorPositionState).isRequired,
-    onChange: React.PropTypes.func,
-    onCursorChange: React.PropTypes.func,
+    onValueChange: React.PropTypes.func,
+    onValueRevisionChange: React.PropTypes.func,
+    onCursorPositionChange: React.PropTypes.func,
+    onCursorPositionRevisionChange: React.PropTypes.func,
     options: React.PropTypes.object,
     debounce: React.PropTypes.number,
   };
 
   static defaultProps = {
-    onChange: () => {
+    onValueChange: () => {
       // noop
     },
-    onCursorChange: () => {
+    onValueRevisionChange: () => {
+      // noop
+    },
+    onCursorPositionChange: () => {
+      // noop
+    },
+    onCursorPositionRevisionChange: () => {
       // noop
     },
     debounce: 500,
@@ -36,8 +44,8 @@ class SimpleMDEComponent extends Component {
       lastCursorPositionState: props.cursorPositionState,
     };
 
-    this.debouncedOnChange = debounce(props.onChange, props.debounce);
-    this.debouncedOnCursorChange = debounce(props.onCursorChange, props.debounce);
+    this.debouncedOnChange = debounce(props.onValueChange, props.debounce);
+    this.debouncedOnCursorChange = debounce(props.onCursorPositionChange, props.debounce);
   }
 
   handleVisibilityChanged = () => {
@@ -63,7 +71,10 @@ class SimpleMDEComponent extends Component {
 
     const value = simplemde.value();
     if (lastValueState.value !== value) {
-      this.setState({lastValueRevision: lastValueRevision + 1});
+      this.setState(
+        {lastValueRevision: lastValueRevision + 1},
+        () => this.props.onValueRevisionChange(lastValueRevision + 1)
+      );
       this.debouncedOnChange(new ValueState(value, lastValueRevision + 1));
     }
 
@@ -73,7 +84,11 @@ class SimpleMDEComponent extends Component {
       lastCursorPositionState.line !== line ||
       lastCursorPositionState.character !== character
     ) {
-      this.setState({lastCursorPositionRevision: lastCursorPositionRevision + 1});
+      console.log("cursor revision because of INNER cursor update");
+      this.setState(
+        {lastCursorPositionRevision: lastCursorPositionRevision + 1},
+        () => this.props.onCursorPositionRevisionChange(lastCursorPositionRevision + 1)
+      );
       this.debouncedOnCursorChange(new CursorPositionState(line, character, lastCursorPositionRevision + 1));
     }
 
@@ -141,28 +156,31 @@ class SimpleMDEComponent extends Component {
     const {debounce, valueState, cursorPositionState} = nextProps;
 
     if (this.props.debounce !== debounce) {
-      this.debouncedOnChange = debounce(props.onChange, debounce);
-      this.debouncedOnCursorChange = debounce(props.onCursorChange, debounce);
+      this.debouncedOnChange = debounce(props.onValueChange, debounce);
+      this.debouncedOnCursorChange = debounce(props.onCursorPositionChange, debounce);
     }
 
     if (this.state.lastValueRevision < valueState.revision) {
-      if (Number.isFinite(valueState.revision)) {
-        this.setState({lastValueRevision: valueState.revision});
-      } else {
-        this.debouncedOnChange(new ValueState(valueState.value, this.state.lastValueRevision + 1));
-        this.setState({lastValueRevision: this.state.lastValueRevision + 1});
-      }
+      this.setState(
+        {
+          lastValueRevision: valueState.revision,
+          lastValueState: valueState,
+        },
+        () =>this.props.onValueRevisionChange(valueState.revision)
+      );
       this.state.simplemde.value(valueState.value);
     }
 
     if (this.state.lastCursorPositionRevision < cursorPositionState.revision) {
       const {line, character: ch} = cursorPositionState;
-      if (Number.isFinite(cursorPositionState.revision)) {
-        this.setState({lastCursorPositionState: cursorPositionState.revision});
-      } else {
-        this.debouncedOnCursorChange(new CursorPositionState(line, ch, this.state.lastCursorPositionRevision + 1));
-        this.setState({lastCursorPositionState: this.state.lastCursorPositionState + 1});
-      }
+      console.log("cursor revision because of OUTER position update");
+      this.setState(
+        {
+          lastCursorPositionRevision: cursorPositionState.revision,
+          lastCursorPositionState: cursorPositionState,
+        },
+        () => this.props.onCursorPositionRevisionChange(cursorPositionState.revision)
+      );
       this.state.simplemde.codemirror.setCursor({line, ch});
     }
   }

@@ -9,15 +9,23 @@ class Editor extends Component {
   static propTypes = {
     valueState: React.PropTypes.instanceOf(ValueState).isRequired,
     cursorPositionState: React.PropTypes.instanceOf(CursorPositionState).isRequired,
-    onChange: PropTypes.func,
-    onCursorChange: PropTypes.func,
+    onValueChange: PropTypes.func,
+    onValueRevisionChange: PropTypes.func,
+    onCursorPositionChange: PropTypes.func,
+    onCursorPositionRevisionChange: PropTypes.func,
   };
 
   static defaultProps = {
-    onChange: () => {
+    onValueChange: () => {
       /* noop */
     },
-    onCursorChange: () => {
+    onValueRevisionChange: () => {
+      /* noop */
+    },
+    onCursorPositionChange: () => {
+      /* noop */
+    },
+    onCursorPositionRevisionChange: () => {
       /* noop */
     },
   };
@@ -26,8 +34,10 @@ class Editor extends Component {
     return (
       <SimpleMDE valueState={this.props.valueState}
                  cursorPositionState={this.props.cursorPositionState}
-                 onChange={this.props.onChange}
-                 onCursorChange={this.props.onCursorChange}
+                 onValueChange={this.props.onValueChange}
+                 onValueRevisionChange={this.props.onValueRevisionChange}
+                 onCursorPositionChange={this.props.onCursorPositionChange}
+                 onCursorPositionRevisionChange={this.props.onCursorPositionRevisionChange}
       />
     );
   }
