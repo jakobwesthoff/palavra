@@ -131,7 +131,7 @@ class Editor extends Component {
     const simplemde = new SimpleMDE(
       Object.assign({}, defaultOptions, this.props.options, priorityOptions)
     );
-    simplemde.codemirror.setOption('viewportMargin', Infinity);
+    simplemde.codemirror.setOption('cursorScrollMargin', 3);
     simplemde.value(this.props.value);
 
     /*

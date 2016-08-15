@@ -1,12 +1,19 @@
 .editor-container {
+  position: absolute;
+  top: 52px;
+  bottom: 10px;
+  left: 0;
+  right: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 .CodeMirror {
+  padding-top: 0;
   margin: 0 auto;
   border: none;
   border-radius: 0;
-  height: auto;
+  height: 100%;
   max-width: 980px;
 }
 
