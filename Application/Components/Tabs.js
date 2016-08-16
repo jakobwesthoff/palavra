@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 class Tabs extends Component {
   static propTypes = {
+    activeTabIndex: PropTypes.number.isRequired,
     onTabActivate: PropTypes.func,
     reverseOrder: PropTypes.bool,
   };
@@ -17,18 +18,17 @@ class Tabs extends Component {
     super(props);
 
     this.state = {
-      activeTabIndex: 0,
+      currentlyVisibleTabIndex: props.activeTabIndex,
     };
   }
 
   handleTabClicked = index => {
-    if (this.state.activeTabIndex === index) {
+    if (this.state.currentlyVisibleTabIndex === index) {
       return;
     }
 
+    this.setState({currentlyVisibleTabIndex: index});
     this.props.onTabActivate(index);
-
-    this.setState({activeTabIndex: index});
   };
 
   bringChildrenIntoOrder(propsChildren) {
@@ -43,7 +43,7 @@ class Tabs extends Component {
   renderChild = (child, index) => {
     return React.cloneElement(child, {
       onClick: () => this.handleTabClicked(index),
-      active: this.state.activeTabIndex === index,
+      active: this.state.currentlyVisibleTabIndex === index,
     });
   };
 
@@ -53,6 +53,17 @@ class Tabs extends Component {
         {this.bringChildrenIntoOrder(this.props.children).map(this.renderChild)}
       </ul>
     );
+  }
+
+  componentDidMount() {
+    this.props.onTabActivate(this.state.currentlyVisibleTabIndex);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.activeTabIndex !== this.state.currentlyVisibleTabIndex) {
+      this.setState({currentlyVisibleTabIndex: newProps.activeTabIndex});
+      this.props.onTabActivate(newProps.activeTabIndex);
+    }
   }
 }
 

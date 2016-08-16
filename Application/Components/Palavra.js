@@ -44,7 +44,8 @@ class Palavra extends Component {
     return (
       <div>
         <Tabs onTabActivate={this.handleTabChanged}
-              reverseOrder={true}>
+              reverseOrder={true}
+              activeTabIndex={this.props.activeTab}>
           <Tab>Foo</Tab>
           <Tab>Bar</Tab>
           <Tab>Baz</Tab>
