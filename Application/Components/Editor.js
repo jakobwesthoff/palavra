@@ -100,6 +100,7 @@ class Editor extends Component {
 
   componentDidMount() {
     const defaultOptions = {
+      autoDownloadFontAwesome: false,
       spellChecker: false,
       status: false,
       toolbar: false,
