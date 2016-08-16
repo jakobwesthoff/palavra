@@ -1,5 +1,5 @@
 import {markdownUpdated} from 'Actions/Markdown';
-import {cursorPositionUpdate} from 'Actions/CursorPosition';
+import {cursorPositionUpdated} from 'Actions/CursorPosition';
 import {tabActivated} from 'Actions/Tabs';
 import ValueState from 'Library/ValueState';
 import CursorPositionState from 'Library/CursorPositionState';
@@ -27,5 +27,5 @@ export const tabActivate = action => (dispatch, getStore) => {
   // Dispatch updates with new revision to force refresh
   dispatch(tabActivated(tabIndex));
   dispatch(markdownUpdated(tabIndex, valueState.toJSON()));
-  dispatch(cursorPositionUpdate(tabIndex, cursorPositionState.toJSON()));
+  dispatch(cursorPositionUpdated(tabIndex, cursorPositionState.toJSON()));
 };
