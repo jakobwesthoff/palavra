@@ -14,18 +14,44 @@ $inactiveTabBackgroundColor: #f5f5f5;
   text-align: right;
   height: 41px;
 
-  .tab {
+  .tab, .action {
     text-align: left;
     display: inline-block;
     position: relative;
     bottom: -1px;
     margin-top: -1px;
+    cursor: pointer;
+    user-select: none;
+    padding: .3rem 1rem;
+  }
+
+  .tab {
+    position: relative;
     border: 1px solid transparent;
     border-top: 3px solid transparent;
     border-radius: 3px 3px 0 0;
-    padding: .3rem .8rem;
-    cursor: pointer;
-    user-select: none;
+
+    button.close {
+      opacity: 0;
+      font-size: 13px;
+      background: linear-gradient(
+                      to right,
+                      rgba($activeTabBackgroundColor, 0) 0%,
+                      rgba($activeTabBackgroundColor, 1) 20%,
+                      rgba($activeTabBackgroundColor, 1) 100%
+      );
+      position: absolute;
+      padding: 0 8px 0 8px;
+      height: 100%;
+      top: 0;
+      right: 0;
+      z-index: 100;
+      transition: opacity .3s cubic-bezier(0.65, 0.05, 0.36, 1);
+    }
+  }
+
+  .action:hover {
+    color: $activeTabHighlightColor;
   }
 
   .tab.active {
@@ -33,5 +59,15 @@ $inactiveTabBackgroundColor: #f5f5f5;
     border-bottom: 1px solid transparent;
     border-top: 3px solid $activeTabHighlightColor;
     background: $activeTabBackgroundColor;
+
+    &:hover {
+      button {
+        opacity: 1;
+      }
+
+      button:hover {
+        color: $activeTabHighlightColor;
+      }
+    }
   }
 }

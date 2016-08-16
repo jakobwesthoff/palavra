@@ -23,6 +23,9 @@ class Tab extends Component {
       <li className={cx('tab', {active: this.props.active})}
           onClick={this.handleTabActivated}>
         {this.props.children}
+        <button className="close">
+          <i className="fa fa-times-circle" />
+        </button>
       </li>
     );
   }

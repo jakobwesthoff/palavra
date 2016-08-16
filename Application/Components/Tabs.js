@@ -51,6 +51,9 @@ class Tabs extends Component {
     return (
       <ul className="tabs">
         {this.bringChildrenIntoOrder(this.props.children).map(this.renderChild)}
+        <li className="action add">
+          <i className="fa fa-plus"/>
+        </li>
       </ul>
     );
   }
