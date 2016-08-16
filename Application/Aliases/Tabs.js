@@ -16,7 +16,7 @@ export const tabActivate = action => (dispatch, getStore) => {
   const store = getStore();
   const tabId = action.payload;
 
-  chrome.storage.local.set({activeTabId: tabId}, () => {
+  chrome.storage.local.set({activeTab: tabId}, () => {
     if (chrome.runtime.lastError !== undefined) {
       dispatch(extensionError(chrome.runtime.lastError));
     }

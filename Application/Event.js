@@ -24,6 +24,7 @@ const loadedStateKeys = [
   'markdownByTabs',
   'cursorPositionByTabs',
   'tabs',
+  'activeTab',
 ];
 
 chrome.storage.local.get(loadedStateKeys, storage => {
