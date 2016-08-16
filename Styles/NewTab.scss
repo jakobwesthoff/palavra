@@ -1,8 +1,10 @@
 @import "reset";
 @import "open-sans";
 @import "emoji-fix";
-
 @import "../node_modules/simplemde/dist/simplemde.min";
+
+$fa-font-path: "../Fonts/FontAwesome";
+@import "../node_modules/font-awesome/scss/font-awesome";
 
 @import "tabs";
 @import "editor";

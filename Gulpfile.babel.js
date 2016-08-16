@@ -57,7 +57,12 @@ gulp.task('copy:fonts:open-sans', () => {
     .pipe(gulp.dest('./Distribution/Fonts/OpenSans/'));
 });
 
-gulp.task('copy:fonts', ['copy:fonts:open-sans']);
+gulp.task('copy:fonts:font-awesome', () => {
+  return gulp.src('node_modules/font-awesome/fonts/**/*')
+    .pipe(gulp.dest('./Distribution/Fonts/FontAwesome'));
+});
+
+gulp.task('copy:fonts', ['copy:fonts:open-sans', 'copy:fonts:font-awesome']);
 
 gulp.task('copy:assets:icons', () => {
   return gulp.src([
