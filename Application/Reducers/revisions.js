@@ -15,12 +15,10 @@ const revisions = (state = initialState, action) => {
     case REVISION_CURSOR_POSITION_SET:
       const newCursorPositionState = cloneDeep(state);
       newCursorPositionState.cursorPosition = action.payload.newRevision;
-      console.log('newCursorPositionState: ', newCursorPositionState);
       return newCursorPositionState;
     case REVISION_VALUE_SET:
       const newValueState = cloneDeep(state);
       newValueState.value = action.payload.newRevision;
-      console.log('newValueState: ', newValueState);
       return newValueState;
     default:
       return state;

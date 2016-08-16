@@ -84,7 +84,6 @@ class Editor extends Component {
       lastCursorPositionState.line !== line ||
       lastCursorPositionState.character !== character
     ) {
-      console.log("cursor revision because of INNER cursor update");
       this.setState(
         {lastCursorPositionRevision: lastCursorPositionRevision + 1},
         () => this.props.onCursorPositionRevisionChange(lastCursorPositionRevision + 1)
@@ -174,7 +173,6 @@ class Editor extends Component {
 
     if (this.state.lastCursorPositionRevision < cursorPositionState.revision) {
       const {line, character: ch} = cursorPositionState;
-      console.log("cursor revision because of OUTER position update");
       this.setState(
         {
           lastCursorPositionRevision: cursorPositionState.revision,
