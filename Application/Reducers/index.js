@@ -5,6 +5,7 @@ import cursorPositionByTabs from './cursorPositionByTabs';
 import extensionError from './extensionError';
 import activeTab from './activeTab';
 import revisions from './revisions';
+import tabs from './tabs';
 
 export default combineReducers({
   markdownByTabs,
@@ -12,4 +13,5 @@ export default combineReducers({
   extensionError,
   activeTab,
   revisions,
+  tabs,
 });

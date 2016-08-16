@@ -2,13 +2,21 @@ import React, {Component, PropTypes} from 'react';
 
 class Tabs extends Component {
   static propTypes = {
-    activeTabIndex: PropTypes.number.isRequired,
+    activeTabId: PropTypes.string.isRequired,
     onTabActivate: PropTypes.func,
+    onTabAddClick: PropTypes.func,
+    onTabCloseClick: PropTypes.func,
     reverseOrder: PropTypes.bool,
   };
 
   static defaultProps = {
     onTabActivate: () => {
+      /* noop */
+    },
+    onTabAddClick: () => {
+      /* noop */
+    },
+    onTabCloseClick: () => {
       /* noop */
     },
     reverseOrder: false,
@@ -18,17 +26,21 @@ class Tabs extends Component {
     super(props);
 
     this.state = {
-      currentlyVisibleTabIndex: props.activeTabIndex,
+      currentlyVisibleTabId: props.activeTabId,
     };
   }
 
-  handleTabClicked = index => {
-    if (this.state.currentlyVisibleTabIndex === index) {
+  handleTabClick = id => {
+    if (this.state.currentlyVisibleTabId === id) {
       return;
     }
 
-    this.setState({currentlyVisibleTabIndex: index});
-    this.props.onTabActivate(index);
+    this.setState({currentlyVisibleTabId: id});
+    this.props.onTabActivate(id);
+  };
+
+  handleTabCloseClick = id => {
+    this.props.onTabCloseClick(id);
   };
 
   bringChildrenIntoOrder(propsChildren) {
@@ -40,18 +52,29 @@ class Tabs extends Component {
     return children;
   }
 
-  renderChild = (child, index) => {
+  renderChild = (child, id, onlyOneChild) => {
     return React.cloneElement(child, {
-      onClick: () => this.handleTabClicked(index),
-      active: this.state.currentlyVisibleTabIndex === index,
+      onClick: () => this.handleTabClick(id),
+      onCloseClick: () => this.handleTabCloseClick(id),
+      active: this.state.currentlyVisibleTabId === id,
+      disableClose: onlyOneChild,
     });
   };
 
   render() {
+    const orderedChildren = this.bringChildrenIntoOrder(this.props.children);
     return (
       <ul className="tabs">
-        {this.bringChildrenIntoOrder(this.props.children).map(this.renderChild)}
-        <li className="action add">
+        {
+          orderedChildren
+            .map(child => this.renderChild(
+              child,
+              child.props.id,
+              orderedChildren.length === 1
+            ))
+        }
+        <li className="action add"
+            onClick={this.props.onTabAddClick}>
           <i className="fa fa-plus"/>
         </li>
       </ul>
@@ -59,13 +82,13 @@ class Tabs extends Component {
   }
 
   componentDidMount() {
-    this.props.onTabActivate(this.state.currentlyVisibleTabIndex);
+    this.props.onTabActivate(this.state.currentlyVisibleTabId);
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.activeTabIndex !== this.state.currentlyVisibleTabIndex) {
-      this.setState({currentlyVisibleTabIndex: newProps.activeTabIndex});
-      this.props.onTabActivate(newProps.activeTabIndex);
+    if (newProps.activeTabId !== this.state.currentlyVisibleTabId) {
+      this.setState({currentlyVisibleTabId: newProps.activeTabId});
+      this.props.onTabActivate(newProps.activeTabId);
     }
   }
 }

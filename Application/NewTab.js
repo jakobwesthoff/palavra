@@ -7,6 +7,7 @@ import {Store} from 'react-chrome-redux';
 
 import Palavra from 'Components/Palavra';
 
+
 // Make sure background is ready before running any init code
 chrome.runtime.getBackgroundPage(() => {
   const store = new Store({

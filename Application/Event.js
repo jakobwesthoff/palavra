@@ -23,6 +23,7 @@ function removeRevision(storage) {
 const loadedStateKeys = [
   'markdownByTabs',
   'cursorPositionByTabs',
+  'tabs',
 ];
 
 chrome.storage.local.get(loadedStateKeys, storage => {
@@ -31,6 +32,8 @@ chrome.storage.local.get(loadedStateKeys, storage => {
   }
 
   removeRevision(storage);
+
+  console.log('loaded: ', storage);
 
   const store = createStore(
     rootReducer,

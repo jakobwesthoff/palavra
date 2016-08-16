@@ -14,8 +14,8 @@ export const cursorPositionUpdate = action => (dispatch, getStore) => {
   chrome.storage.local.set({cursorPositionByTabs}, () => {
     if (chrome.runtime.lastError !== undefined) {
       dispatch(extensionError(chrome.runtime.lastError));
-      return;
     }
-    dispatch(cursorPositionUpdated(tabIndex, cursorPositionState));
   });
+
+  dispatch(cursorPositionUpdated(tabIndex, cursorPositionState));
 };

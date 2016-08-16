@@ -14,8 +14,8 @@ export const markdownUpdate = action => (dispatch, getStore) => {
   chrome.storage.local.set({markdownByTabs}, () => {
     if (chrome.runtime.lastError !== undefined) {
       dispatch(extensionError(chrome.runtime.lastError));
-      return;
     }
-    dispatch(markdownUpdated(tabIndex, valueState));
   });
+
+  dispatch(markdownUpdated(tabIndex, valueState));
 };

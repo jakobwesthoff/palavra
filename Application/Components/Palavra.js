@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import uuid from 'uuid';
 
-import {tabActivate} from 'Actions/Tabs';
+import {tabActivate, tabAdd, tabRemove} from 'Actions/Tabs';
 import {markdownUpdate} from 'Actions/Markdown';
 import {cursorPositionUpdate} from 'Actions/CursorPosition';
 import {revisionValueSet, revisionCursorPositionSet} from 'Actions/Revision';
@@ -17,6 +18,32 @@ class Palavra extends Component {
   handleTabChanged = (newIndex) => {
     const {dispatch} = this.props;
     dispatch(tabActivate(newIndex));
+  };
+
+  handleTabAdd = () => {
+    const {dispatch} = this.props;
+    const newName = 'New Tab';
+    const newId = uuid.v4({
+      rng: uuid.whatwgRNG,
+    });
+    dispatch(tabAdd(newId, newName));
+  };
+
+  handleTabRemove = (id) => {
+    const {dispatch} = this.props;
+    if (this.props.tabs.length === 1) {
+      return;
+    }
+    const position = this.props.tabs.findIndex(tab => tab.id === id);
+    // Fix rendering bug
+    if (position === 0) {
+      const newId = this.props.tabs[1].id;
+      dispatch(tabRemove(id));
+      dispatch(tabActivate(newId));
+    } else {
+      dispatch(tabActivate(this.props.tabs[position - 1].id));
+      dispatch(tabRemove(id));
+    }
   };
 
   handleValueChanged = newValueState => {
@@ -39,16 +66,24 @@ class Palavra extends Component {
     dispatch(revisionCursorPositionSet(newRevision));
   };
 
+  renderTab(tab, index) {
+    return (
+      <Tab key={tab.id}
+           id={tab.id}>
+        {tab.name}
+      </Tab>
+    );
+  }
 
   render() {
     return (
       <div>
         <Tabs onTabActivate={this.handleTabChanged}
+              onTabAddClick={this.handleTabAdd}
+              onTabCloseClick={this.handleTabRemove}
               reverseOrder={true}
-              activeTabIndex={this.props.activeTab}>
-          <Tab>Foo</Tab>
-          <Tab>Bar</Tab>
-          <Tab>Baz</Tab>
+              activeTabId={this.props.activeTab}>
+          {this.props.tabs.map(this.renderTab)}
         </Tabs>
         <Editor valueState={this.props.valueState}
                 cursorPositionState={this.props.cursorPositionState}
@@ -63,7 +98,13 @@ class Palavra extends Component {
 }
 
 const mapStateToProps = state => {
-  const {activeTab, markdownByTabs, cursorPositionByTabs} = state;
+  const {
+    activeTab,
+    markdownByTabs,
+    cursorPositionByTabs,
+    tabs,
+  } = state;
+
   let valueState = new ValueState();
   let cursorPositionState = new CursorPositionState();
 
@@ -79,6 +120,7 @@ const mapStateToProps = state => {
     valueState,
     cursorPositionState,
     activeTab,
+    tabs,
   };
 };
 
