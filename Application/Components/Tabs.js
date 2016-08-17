@@ -1,7 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import Popover from 'react-popover';
 
+import CloseQuestion from './Popover/CloseQuestion';
+import Configuration from './Popover/Configuration';
+
 class Tabs extends Component {
+  static POPOVER_CLOSE_QUESTION = 'popover.question.close';
+  static POPOVER_CONFIGURATION = 'popover.configuration';
+
   static propTypes = {
     activeTabId: PropTypes.string.isRequired,
     onTabActivate: PropTypes.func,
@@ -28,7 +34,8 @@ class Tabs extends Component {
 
     this.state = {
       currentlyVisibleTabId: props.activeTabId,
-      openCloseQuestion: null,
+      activePopover: null,
+      popoverType: null,
     };
   }
 
@@ -38,25 +45,44 @@ class Tabs extends Component {
     }
 
     this.setState({
-      openCloseQuestion: null,
+      activePopover: null,
       currentlyVisibleTabId: id
     });
     this.props.onTabActivate(id);
   };
 
   handleTabDoubleClick = id => {
-    console.log('double click: ', id);
+    if (this.state.activePopover !== null) {
+      return;
+    }
+
+    this.setState({
+      activePopover: id,
+      popoverType: Tabs.POPOVER_CONFIGURATION,
+    });
   };
 
   handleTabCloseClick = id => {
-    this.setState({openCloseQuestion: id});
+    if (this.state.activePopover !== null) {
+      return;
+    }
+
+    this.setState({
+      activePopover: id,
+      popoverType: Tabs.POPOVER_CLOSE_QUESTION,
+    });
   };
 
   handleCloseCancelClick(id) {
-    this.setState({openCloseQuestion: null});
+    this.setState({
+      activePopover: null,
+    });
   }
 
   handleCloseAcceptClick(id) {
+    this.setState({
+      activePopover: null,
+    });
     this.props.onTabRemove(id);
   }
 
@@ -69,28 +95,28 @@ class Tabs extends Component {
     return children;
   }
 
-  renderRemoveQuestion(id) {
-    return (
-      <div className="dialog">
-        <div className="header">
-          Remove this tab
-        </div>
-        <div className="body">
-          Are you sure you want to irrevocably remove this tab and all of its contents?
-        </div>
-        <div className="buttons">
-          <button onClick={() => this.handleCloseCancelClick(id)}>Cancel</button>
-          <button onClick={() => this.handleCloseAcceptClick(id)}>Remove</button>
-        </div>
-      </div>
-    );
+  renderPopover(id, child) {
+    switch (this.state.popoverType) {
+      case Tabs.POPOVER_CLOSE_QUESTION:
+        return (
+          <CloseQuestion onCancel={() => this.handleCloseCancelClick(id)}
+                         onAccept={() => this.handleCloseAcceptClick(id)}/>
+        );
+      case Tabs.POPOVER_CONFIGURATION:
+        return (
+          <Configuration name={child.props.name}
+          />
+        );
+      default:
+        return <div />
+    }
   }
 
   renderTab = (child, id, onlyOneChild) => {
     return (
       <Popover key={id}
-               body={this.renderRemoveQuestion(id)}
-               isOpen={this.state.openCloseQuestion === id}
+               body={this.renderPopover(id, child)}
+               isOpen={this.state.activePopover === id}
                preferPlace="below">
         {React.cloneElement(child, {
           onClick: () => this.handleTabClick(id),

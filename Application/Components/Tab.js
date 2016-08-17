@@ -6,12 +6,17 @@ class Tab extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      renameInProgress: false,
+    };
+
     this._secondClick = false;
     this._closeButton = null;
   }
 
   static propTypes = {
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     active: PropTypes.bool,
     disableClose: PropTypes.bool,
     onClick: PropTypes.func,
@@ -82,7 +87,7 @@ class Tab extends Component {
     return (
       <li className={cx('tab', {active: this.props.active})}
           onClick={this.handleTabClick}>
-        {this.props.children}
+        {this.props.name}
         {!this.props.disableClose ? closeButton : null}
       </li>
     );

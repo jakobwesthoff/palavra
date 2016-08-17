@@ -69,9 +69,9 @@ class Palavra extends Component {
   renderTab(tab, index) {
     return (
       <Tab key={tab.id}
-           id={tab.id}>
-        {tab.name}
-      </Tab>
+           id={tab.id}
+           name={tab.name}
+      />
     );
   }
 
