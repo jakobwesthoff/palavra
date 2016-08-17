@@ -1,0 +1,61 @@
+.Popover {
+  z-index: 900;
+
+  .Popover-body {
+    display: inline-flex;
+    flex-direction: column;
+    background: $darkBackgroundColor;
+    color: $darkForegroundColor;
+    border-radius: 0.3rem;
+  }
+
+  .Popover-tipShape {
+    fill: $darkBackgroundColor;
+  }
+
+  .dialog {
+    max-width: 400px;
+    .header {
+      color: $darkHighlightColor;
+      margin: 1rem 2rem .5rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .body {
+      font-size: .8rem;
+      margin: .5rem 2rem 1rem 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      margin: .5rem .3rem .3rem .3rem;
+
+      button {
+        padding: .4rem;
+        font-size: 14px;
+        color: $darkForegroundColor;
+        flex: 1 1 auto;
+        margin-right: 1px;
+        background: $darkSecondBackgroundColor;
+      }
+
+      button:first-child {
+        border-radius: 0 0 0 0.3rem;
+      }
+
+      button:last-child {
+        border-radius: 0 0 0.3rem 0;
+        margin-right: 0;
+      }
+
+
+      button:hover {
+        background: $darkHighlightColor;
+        color: black;
+      }
+    }
+  }
+}
+

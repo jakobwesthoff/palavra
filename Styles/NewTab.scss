@@ -1,3 +1,15 @@
+$backgroundColor: white;
+$foregroundColor: black;
+$highlightColor: goldenrod;
+$secondBackgroundColor: #f5f5f5;
+$dividerColor: #C3C1C3;
+
+$darkHighlightColor: $highlightColor;
+$darkBackgroundColor: hsl(0, 0%, 27%);
+$darkForegroundColor: white;
+$darkSecondBackgroundColor: hsl(0, 0%, 37%);
+$darkDividerColor: $dividerColor;
+
 @import "reset";
 @import "open-sans";
 @import "emoji-fix";
@@ -6,6 +18,7 @@
 $fa-font-path: "../Fonts/FontAwesome";
 @import "../node_modules/font-awesome/scss/font-awesome";
 
+@import "popover";
 @import "tabs";
 @import "editor";
 

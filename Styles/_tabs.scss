@@ -1,7 +1,7 @@
-$tabBorderColor: #C3C1C3;
-$activeTabHighlightColor: goldenrod;
-$activeTabBackgroundColor: #ffffff;
-$inactiveTabBackgroundColor: #f5f5f5;
+$tabBorderColor: $dividerColor;
+$activeTabHighlightColor: $highlightColor;
+$activeTabBackgroundColor: $backgroundColor;
+$inactiveTabBackgroundColor: $secondBackgroundColor;
 
 .tabs {
   font-size: 13px;

@@ -79,8 +79,8 @@ class Palavra extends Component {
     return (
       <div>
         <Tabs onTabActivate={this.handleTabChanged}
-              onTabAddClick={this.handleTabAdd}
-              onTabCloseClick={this.handleTabRemove}
+              onTabAdd={this.handleTabAdd}
+              onTabRemove={this.handleTabRemove}
               reverseOrder={true}
               activeTabId={this.props.activeTab}>
           {this.props.tabs.map(this.renderTab)}
