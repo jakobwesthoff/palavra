@@ -39,6 +39,10 @@ class Tabs extends Component {
     this.props.onTabActivate(id);
   };
 
+  handleTabDoubleClick = id => {
+    console.log('double click: ', id);
+  };
+
   handleTabCloseClick = id => {
     this.props.onTabCloseClick(id);
   };
@@ -55,6 +59,7 @@ class Tabs extends Component {
   renderChild = (child, id, onlyOneChild) => {
     return React.cloneElement(child, {
       onClick: () => this.handleTabClick(id),
+      onDoubleClick: () => this.handleTabDoubleClick(id),
       onCloseClick: () => this.handleTabCloseClick(id),
       active: this.state.currentlyVisibleTabId === id,
       disableClose: onlyOneChild,
