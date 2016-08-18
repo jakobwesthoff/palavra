@@ -12,6 +12,7 @@ class Tab extends Component {
 
     this._secondClick = false;
     this._closeButton = null;
+    this._configureButton = null;
   }
 
   static propTypes = {
@@ -22,6 +23,7 @@ class Tab extends Component {
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func,
     onCloseClick: PropTypes.func,
+    onConfigureClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -34,6 +36,9 @@ class Tab extends Component {
       /** noop **/
     },
     onCloseClick: () => {
+      /** noop **/
+    },
+    onConfigureClick: () => {
       /** noop **/
     },
   };
@@ -75,6 +80,19 @@ class Tab extends Component {
     }
   };
 
+  handleConfigureClick = () => {
+    // Only issue click if element was visible
+    const computed = window.getComputedStyle(
+      this._configureButton,
+      null
+    );
+    const opacity = computed.getPropertyValue('opacity');
+
+    if (opacity > .9) {
+      this.props.onConfigureClick();
+    }
+  };
+
   render() {
     const closeButton = (
       <button ref={button => this._closeButton = button}
@@ -84,10 +102,20 @@ class Tab extends Component {
       </button>
     );
 
+    const configureButton = (
+      <button ref={button => this._configureButton = button}
+              className="configure"
+              onClick={this.handleConfigureClick}>
+        <i className="fa fa-cog"/>
+      </button>
+    );
+
+
     return (
       <li className={cx('tab', {active: this.props.active})}
           onClick={this.handleTabClick}>
         {this.props.name}
+        {configureButton}
         {!this.props.disableClose ? closeButton : null}
       </li>
     );

@@ -57,7 +57,7 @@ class Tabs extends Component {
     this.props.onTabActivate(id);
   };
 
-  handleTabDoubleClick = id => {
+  handleTabConfigureClick = id => {
     if (this.state.activePopover !== null) {
       return;
     }
@@ -136,7 +136,7 @@ class Tabs extends Component {
                preferPlace="below">
         {React.cloneElement(child, {
           onClick: () => this.handleTabClick(id),
-          onDoubleClick: () => this.handleTabDoubleClick(id),
+          onConfigureClick: () => this.handleTabConfigureClick(id),
           onCloseClick: () => this.handleTabCloseClick(id),
           active: this.state.currentlyVisibleTabId === id,
           disableClose: onlyOneChild,

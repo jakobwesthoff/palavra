@@ -31,22 +31,35 @@ $inactiveTabBackgroundColor: $secondBackgroundColor;
     border-top: 3px solid transparent;
     border-radius: 3px 3px 0 0;
 
-    button.close {
+    button {
       opacity: 0;
       font-size: 13px;
-      background: linear-gradient(
-                      to right,
-                      rgba($activeTabBackgroundColor, 0) 0%,
-                      rgba($activeTabBackgroundColor, 1) 20%,
-                      rgba($activeTabBackgroundColor, 1) 100%
-      );
       position: absolute;
+      top: 0;
       padding: 0 8px 0 8px;
       height: 100%;
-      top: 0;
-      right: 0;
       z-index: 100;
       transition: opacity .3s cubic-bezier(0.65, 0.05, 0.36, 1);
+
+      &.close {
+        background: linear-gradient(
+                        to right,
+                        rgba($activeTabBackgroundColor, 0) 0%,
+                        rgba($activeTabBackgroundColor, 1) 20%,
+                        rgba($activeTabBackgroundColor, 1) 100%
+        );
+        right: 0;
+      }
+
+      &.configure {
+        background: linear-gradient(
+                        to left,
+                        rgba($activeTabBackgroundColor, 0) 0%,
+                        rgba($activeTabBackgroundColor, 1) 20%,
+                        rgba($activeTabBackgroundColor, 1) 100%
+        );
+        left: 0;
+      }
     }
   }
 
