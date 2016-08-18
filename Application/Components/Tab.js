@@ -115,6 +115,7 @@ class Tab extends Component {
       <li className={cx('tab', {active: this.props.active})}
           onClick={this.handleTabClick}>
         {this.props.name}
+        <div className="fader"/>
         {configureButton}
         {!this.props.disableClose ? closeButton : null}
       </li>
