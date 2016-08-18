@@ -13,6 +13,10 @@ import {webpackConfig} from './webpack.config.js';
 
 const plugins = loadPlugins();
 
+function isDevelopmentEnvironment() {
+  return process.env.NODE_ENV !== 'production';
+}
+
 function chokidarWatch(glob, fn) {
   const watcher = chokidar.watch(glob);
   watcher.on('ready', () => {
@@ -48,8 +52,13 @@ gulp.task('copy:pages', () => {
 });
 
 gulp.task('copy:manifest', () => {
-  return gulp.src('manifest.json')
-    .pipe(gulp.dest('./Distribution/'));
+  let stream = gulp.src('manifest.json');
+  if (!isDevelopmentEnvironment()) {
+    stream = stream.pipe(
+      plugins.replace(/"name": "([^"]+) DEV"/, '"name": "$1"')
+    );
+  }
+  return stream.pipe(gulp.dest('./Distribution/'));
 });
 
 gulp.task('copy:fonts:open-sans', () => {
@@ -110,14 +119,16 @@ gulp.task('webpack:watch', next => {
 });
 
 gulp.task('sass', () => {
-  return gulp.src(['Styles/**/*.{scss,sass}', '!Styles/**/_*.{scss,sass}'])
-    .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.plumber(function(error) { // We need a this bindable function here
-      beepbeep();
-      console.error(chalk.red('Error compiling Sass file.')); // eslint-disable-line no-console
-      console.error(chalk.red(error.message)); // eslint-disable-line no-console
-      this.emit('end');
-    }))
+  let stream = gulp.src(['Styles/**/*.{scss,sass}', '!Styles/**/_*.{scss,sass}']);
+  if (isDevelopmentEnvironment()) {
+    stream = stream.pipe(plugins.sourcemaps.init());
+  }
+  stream = stream.pipe(plugins.plumber(function (error) { // We need a this bindable function here
+    beepbeep();
+    console.error(chalk.red('Error compiling Sass file.')); // eslint-disable-line no-console
+    console.error(chalk.red(error.message)); // eslint-disable-line no-console
+    this.emit('end');
+  }))
     .pipe(plugins.sass({
       precision: 8,
       errLogToConsole: false,
@@ -125,17 +136,53 @@ gulp.task('sass', () => {
     .pipe(plugins.plumber.stop())
     .pipe(plugins.autoprefixer({
       browsers: 'last 5 Chrome versions',
-    }))
-    .pipe(plugins.sourcemaps.write('./', {sourceRoot: null}))
-    .pipe(gulp.dest('Distribution/Styles/'));
+    }));
+
+  if (isDevelopmentEnvironment()) {
+    stream = stream.pipe(plugins.sourcemaps.write('./', {sourceRoot: null}))
+  }
+  return stream.pipe(gulp.dest('Distribution/Styles/'));
 });
 
-gulp.task('build', next => run(
-  'clean',
-  'prepare',
-  ['copy', 'sass', 'webpack'],
-  next
-));
+gulp.task('optimize:css', () => {
+  return gulp.src('Distribution/**/*.css')
+    .pipe(plugins.cleanCss())
+    .pipe(gulp.dest('Distribution'));
+});
+
+gulp.task('optimize:html', () => {
+  return gulp.src('Distribution/**/*.html')
+    .pipe(plugins.htmlmin({collapseWhitespace: true}))
+    .pipe(gulp.dest('Distribution'));
+});
+
+gulp.task('optimize:javascript', () => {
+  return gulp.src('Distribution/**/*.js')
+    .pipe(plugins.uglify({
+      preserveComments: 'license',
+    }))
+    .pipe(gulp.dest('Distribution'));
+});
+
+
+gulp.task('optimize', ['optimize:css', 'optimize:html', 'optimize:javascript']);
+
+gulp.task('build', next => {
+  const buildSteps = [
+    'clean',
+    'prepare',
+    ['copy', 'sass', 'webpack'],
+  ];
+
+  if (!isDevelopmentEnvironment()) {
+    buildSteps.push('optimize');
+  }
+
+  run(
+    ...buildSteps,
+    next
+  );
+});
 
 gulp.task('build:without-webpack', next => run(
   'clean',

@@ -1,4 +1,5 @@
 import path from 'path';
+import {DefinePlugin} from 'webpack';
 
 export const webpackConfig = {
   entry: {
@@ -17,6 +18,12 @@ export const webpackConfig = {
   },
 
   node: { fs: 'empty' },
+
+  plugins: [
+    new DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+    }),
+  ],
 
   module: {
     loaders: [
@@ -38,6 +45,8 @@ export const webpackConfig = {
       }
     ]
   },
-
-  devtool: 'source-map',
 };
+
+if (process.env.NODE_ENV !== 'production') {
+  webpackConfig.devtool = 'source-map' ;
+}
