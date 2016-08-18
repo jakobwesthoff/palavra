@@ -79,8 +79,8 @@ export const tabRename = action => (dispatch, getStore) => {
   const store = getStore();
   const {id, newName} = action.payload;
 
-  const tabs = [...store.tabs]
-    .find(tab => tab.id === id)
+  const tabs = [...store.tabs];
+  tabs.find(tab => tab.id === id)
     .name = newName;
 
   chrome.storage.local.set({tabs}, () => {
