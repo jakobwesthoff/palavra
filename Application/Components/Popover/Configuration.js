@@ -2,7 +2,8 @@ import React, {PropTypes} from 'react';
 import Popover from './Popover';
 
 class Configuration extends Popover {
-  static propTypes = {...Popover.propTypes,
+  static propTypes = {
+    ...Popover.propTypes,
     name: PropTypes.string.isRequired,
   };
 
@@ -30,6 +31,11 @@ class Configuration extends Popover {
     this.setState({newName});
   };
 
+  handleSubmit = event => {
+    event.preventDefault();
+    this.handleAccept();
+  };
+
   render() {
     return (
       <div className="dialog configuration">
@@ -37,12 +43,14 @@ class Configuration extends Popover {
           Configure this tab
         </div>
         <div className="body">
-          <label>Name</label>
-          <input ref={input => this._nameInput = input}
-                 type="text"
-                 value={this.state.newName}
-                 onChange={this.handleNameChange}
-          />
+          <form onSubmit={this.handleSubmit}>
+            <label>Name</label>
+            <input ref={input => this._nameInput = input}
+                   type="text"
+                   value={this.state.newName}
+                   onChange={this.handleNameChange}
+            />
+          </form>
         </div>
         <div className="buttons">
           <button onClick={this.props.onCancel}>Cancel</button>
