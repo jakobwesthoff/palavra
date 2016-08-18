@@ -39,13 +39,13 @@ $inactiveTabBackgroundColor: $secondBackgroundColor;
       position: absolute;
       z-index: 10;
       height: 100%;
-      width: 1.3rem;
+      width: 1.6rem;
       top: 0;
       right: 0;
       background: linear-gradient(
                       to right,
                       rgba($inactiveTabBackgroundColor, 0) 0%,
-                      rgba($inactiveTabBackgroundColor, 1) 20%,
+                      rgba($inactiveTabBackgroundColor, 1) 45%,
                       rgba($inactiveTabBackgroundColor, 1) 100%
       );
     }
@@ -107,7 +107,7 @@ $inactiveTabBackgroundColor: $secondBackgroundColor;
       background: linear-gradient(
                       to right,
                       rgba($activeTabBackgroundColor, 0) 0%,
-                      rgba($activeTabBackgroundColor, 1) 20%,
+                      rgba($activeTabBackgroundColor, 1) 45%,
                       rgba($activeTabBackgroundColor, 1) 100%
       );
     }
