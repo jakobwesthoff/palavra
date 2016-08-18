@@ -4,6 +4,7 @@ import {
   TAB_ACTIVATE,
   TAB_ADD,
   TAB_REMOVE,
+  TAB_RENAME,
 } from 'Actions/Tabs';
 
 import {markdownUpdate} from './Markdown';
@@ -12,6 +13,7 @@ import {
   tabActivate,
   tabAdd,
   tabRemove,
+  tabRename,
 } from './Tabs';
 
 const aliases = {
@@ -20,6 +22,7 @@ const aliases = {
   [TAB_ACTIVATE]: tabActivate,
   [TAB_ADD]: tabAdd,
   [TAB_REMOVE]: tabRemove,
+  [TAB_RENAME]: tabRename,
 };
 
 export default aliases;

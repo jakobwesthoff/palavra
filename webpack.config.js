@@ -31,10 +31,13 @@ export const webpackConfig = {
             'react'
           ],
           plugins: [
-            'transform-class-properties'
+            'transform-class-properties',
+            'transform-object-rest-spread',
           ]
         }
       }
     ]
-  }
+  },
+
+  devtool: 'source-map',
 };

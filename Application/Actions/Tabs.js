@@ -5,6 +5,7 @@ export const TAB_ADDED = 'TAB_ADDED';
 export const TAB_REMOVE = 'TAB_REMOVE';
 export const TAB_REMOVED = 'TAB_REMOVED';
 export const TAB_RENAME = 'TAB_RENAME';
+export const TAB_RENAMED = 'TAB_RENAMED';
 
 export const tabActivate = tabId => ({
   type: TAB_ACTIVATE,
@@ -36,7 +37,12 @@ export const tabRemoved = id => ({
   payload: {id},
 });
 
-export const tabRename = (tabIndex, newName) => ({
+export const tabRename = (id, newName) => ({
   type: TAB_RENAME,
-  payload: {tabIndex, newName},
+  payload: {id, newName},
+});
+
+export const tabRenamed = (id, newName) => ({
+  type: TAB_RENAMED,
+  payload: {id, newName},
 });

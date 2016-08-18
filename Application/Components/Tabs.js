@@ -13,6 +13,7 @@ class Tabs extends Component {
     onTabActivate: PropTypes.func,
     onTabAdd: PropTypes.func,
     onTabRemove: PropTypes.func,
+    onTabRename: PropTypes.func,
     reverseOrder: PropTypes.bool,
   };
 
@@ -26,11 +27,16 @@ class Tabs extends Component {
     onTabRemove: () => {
       /* noop */
     },
+    onTabRename: () => {
+      /* noop */
+    },
     reverseOrder: false,
   };
 
   constructor(props) {
     super(props);
+
+    this._activePopoverComponent = null;
 
     this.state = {
       currentlyVisibleTabId: props.activeTabId,
@@ -73,7 +79,7 @@ class Tabs extends Component {
     });
   };
 
-  handleCloseCancelClick(id) {
+  handleCancelClick(id) {
     this.setState({
       activePopover: null,
     });
@@ -84,6 +90,13 @@ class Tabs extends Component {
       activePopover: null,
     });
     this.props.onTabRemove(id);
+  }
+
+  handleConfigurationAcceptClick(id, newName) {
+    this.setState({
+      activePopover: null,
+    });
+    this.props.onTabRename(id, newName);
   }
 
   bringChildrenIntoOrder(propsChildren) {
@@ -99,13 +112,16 @@ class Tabs extends Component {
     switch (this.state.popoverType) {
       case Tabs.POPOVER_CLOSE_QUESTION:
         return (
-          <CloseQuestion onCancel={() => this.handleCloseCancelClick(id)}
+          <CloseQuestion ref={component => this._activePopoverComponent = component}
+                         onCancel={() => this.handleCancelClick(id)}
                          onAccept={() => this.handleCloseAcceptClick(id)}/>
         );
       case Tabs.POPOVER_CONFIGURATION:
         return (
-          <Configuration name={child.props.name}
-          />
+          <Configuration ref={component => this._activePopoverComponent = component}
+                         name={child.props.name}
+                         onCancel={() => this.handleCancelClick(id)}
+                         onAccept={newName => this.handleConfigurationAcceptClick(id, newName)}/>
         );
       default:
         return <div />
@@ -152,6 +168,15 @@ class Tabs extends Component {
 
   componentDidMount() {
     this.props.onTabActivate(this.state.currentlyVisibleTabId);
+  }
+
+  componentDidUpdate(previousProps, previousState) { /* eslint-disable-line no-unused-vars */
+    if (
+      this.state.activePopover !== previousState.activePopover &&
+      this._activePopoverComponent !== null
+    ) {
+      this._activePopoverComponent.onActivation();
+    }
   }
 
   componentWillReceiveProps(newProps) {

@@ -23,8 +23,36 @@
     }
 
     .body {
+      display: flex;
+      flex-direction: column;
       font-size: .8rem;
       margin: .5rem 2rem 1rem 2rem;
+
+
+      label {
+        font-size: .8rem;
+        font-weight: bold;
+        flex: 1 1 auto;
+        margin-bottom: .3rem;
+      }
+
+      input {
+        font-size: .8rem;
+        color: $darkForegroundColor;
+        flex: 1 1 auto;
+        background: $darkSecondBackgroundColor;
+        border: 1px solid $darkDividerColor;
+        padding: .3rem;
+
+        &::selection {
+          background: $darkHighlightColor;
+        }
+
+        &:focus {
+          border: 1px solid $darkHighlightColor;
+          outline: none;
+        }
+      }
     }
 
     .buttons {
@@ -50,11 +78,24 @@
         margin-right: 0;
       }
 
-
       button:hover {
         background: $darkHighlightColor;
         color: black;
       }
+    }
+  }
+
+  .dialog.configuration {
+    input {
+      width: 260px;
+    }
+
+    .header {
+      margin-bottom: 1rem;
+    }
+
+    .buttons {
+      margin-top: 2rem;
     }
   }
 }

@@ -1,28 +1,24 @@
-import React, {Component, PropTypes} from 'react';
+import React, {PropTypes} from 'react';
+import Popover from './Popover';
 
-class Configuration extends Component {
-  static propTypes = {
-    onAccept: PropTypes.func,
-    onCancel: PropTypes.func,
+class Configuration extends Popover {
+  static propTypes = {...Popover.propTypes,
     name: PropTypes.string.isRequired,
-  };
-
-  static defaultProps = {
-    onAccept: () => {
-      /* noop */
-    },
-    onCancel: () => {
-      /* noop */
-    },
   };
 
   constructor(props) {
     super(props);
 
+    this._nameInput = null;
+
     this.state = {
       newName: props.name,
     }
   }
+
+  onActivation = () => {
+    this._nameInput.select();
+  };
 
   handleAccept = () => {
     const {newName} = this.state;
@@ -36,13 +32,14 @@ class Configuration extends Component {
 
   render() {
     return (
-      <div className="dialog">
+      <div className="dialog configuration">
         <div className="header">
           Configure this tab
         </div>
         <div className="body">
           <label>Name</label>
-          <input type="text"
+          <input ref={input => this._nameInput = input}
+                 type="text"
                  value={this.state.newName}
                  onChange={this.handleNameChange}
           />

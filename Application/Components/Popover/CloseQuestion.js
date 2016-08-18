@@ -15,6 +15,10 @@ class CloseQuestion extends Component {
     },
   };
 
+  onActivation = () => {
+    /* noop */
+  };
+
   render() {
     return (
       <div className="dialog">

@@ -7,6 +7,7 @@ import {
   tabActivated,
   tabAdded,
   tabRemoved,
+  tabRenamed,
 } from 'Actions/Tabs';
 
 import ValueState from 'Library/ValueState';
@@ -72,4 +73,21 @@ export const tabRemove = action => (dispatch, getStore) => {
   });
 
   dispatch(tabRemoved(id));
+};
+
+export const tabRename = action => (dispatch, getStore) => {
+  const store = getStore();
+  const {id, newName} = action.payload;
+
+  const tabs = [...store.tabs]
+    .find(tab => tab.id === id)
+    .name = newName;
+
+  chrome.storage.local.set({tabs}, () => {
+    if (chrome.runtime.lastError !== undefined) {
+      dispatch(extensionError(chrome.runtime.lastError));
+    }
+  });
+
+  dispatch(tabRenamed(id, newName));
 };

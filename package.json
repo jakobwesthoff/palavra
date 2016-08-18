@@ -47,6 +47,7 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "classnames": "^2.2.5",
     "font-awesome": "^4.6.3",
     "lodash.clonedeep": "^4.5.0",

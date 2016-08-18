@@ -56,7 +56,7 @@ class Editor extends Component {
   };
 
 
-  handleDocumentBodyClicked = () => {
+  handleEditorBodyClicked = () => {
     this.state.simplemde.codemirror.focus();
   };
 
@@ -143,12 +143,10 @@ class Editor extends Component {
 
     this.setState({simplemde});
 
-    document.addEventListener('click', this.handleDocumentBodyClicked);
     document.addEventListener('visibilitychange', this.handleVisibilityChanged);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleDocumentBodyClicked);
     document.removeEventListener('visibilitychange', this.handleVisibilityChanged);
   }
 
@@ -186,7 +184,9 @@ class Editor extends Component {
 
   render() {
     return (
-      <div ref="editor" className="editor-container">
+      <div ref="editor"
+           className="editor-container"
+           onClick={this.handleEditorBodyClicked}>
         <textarea ref="textarea"/>
       </div>
     );

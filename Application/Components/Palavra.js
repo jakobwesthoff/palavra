@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import uuid from 'uuid';
 
-import {tabActivate, tabAdd, tabRemove} from 'Actions/Tabs';
+import {tabActivate, tabAdd, tabRemove, tabRename} from 'Actions/Tabs';
 import {markdownUpdate} from 'Actions/Markdown';
 import {cursorPositionUpdate} from 'Actions/CursorPosition';
 import {revisionValueSet, revisionCursorPositionSet} from 'Actions/Revision';
@@ -46,6 +46,11 @@ class Palavra extends Component {
     }
   };
 
+  handleTabRename = (id, newName) => {
+    const {dispatch} = this.props;
+    dispatch(tabRename(id, newName));
+  };
+
   handleValueChanged = newValueState => {
     const {dispatch, activeTab} = this.props;
     dispatch(markdownUpdate(activeTab, newValueState.toJSON()));
@@ -81,6 +86,7 @@ class Palavra extends Component {
         <Tabs onTabActivate={this.handleTabChanged}
               onTabAdd={this.handleTabAdd}
               onTabRemove={this.handleTabRemove}
+              onTabRename={this.handleTabRename}
               reverseOrder={true}
               activeTabId={this.props.activeTab}>
           {this.props.tabs.map(this.renderTab)}
