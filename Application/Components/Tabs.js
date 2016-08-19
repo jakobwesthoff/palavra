@@ -1,5 +1,9 @@
 import React, {Component, PropTypes} from 'react';
+import {findDOMNode} from 'react-dom';
+
 import Popover from 'react-popover';
+
+import getRelativeElementGeometry from 'Library/getRelativeElementGeometry';
 
 import CloseQuestion from './Popover/CloseQuestion';
 import Configuration from './Popover/Configuration';
@@ -15,6 +19,7 @@ class Tabs extends Component {
     onTabRemove: PropTypes.func,
     onTabRename: PropTypes.func,
     reverseOrder: PropTypes.bool,
+    children: PropTypes.array,
   };
 
   static defaultProps = {
@@ -36,12 +41,15 @@ class Tabs extends Component {
   constructor(props) {
     super(props);
 
+    this._tabReferences = new Map();
     this._activePopoverComponent = null;
 
     this.state = {
       currentlyVisibleTabId: props.activeTabId,
-      activePopover: null,
+      popoverTabId: null,
       popoverType: null,
+      popoverBlindGeometry: {},
+      popoverIsActive: false,
     };
   }
 
@@ -50,52 +58,32 @@ class Tabs extends Component {
       return;
     }
 
+    this.deactivatePopover();
     this.setState({
-      activePopover: null,
       currentlyVisibleTabId: id
     });
     this.props.onTabActivate(id);
   };
 
   handleTabConfigureClick = id => {
-    if (this.state.activePopover !== null) {
-      return;
-    }
-
-    this.setState({
-      activePopover: id,
-      popoverType: Tabs.POPOVER_CONFIGURATION,
-    });
+    this.activatePopover(id, Tabs.POPOVER_CONFIGURATION);
   };
 
   handleTabCloseClick = id => {
-    if (this.state.activePopover !== null) {
-      return;
-    }
-
-    this.setState({
-      activePopover: id,
-      popoverType: Tabs.POPOVER_CLOSE_QUESTION,
-    });
+    this.activatePopover(id, Tabs.POPOVER_CLOSE_QUESTION);
   };
 
   handleCancelClick(id) {
-    this.setState({
-      activePopover: null,
-    });
+    this.deactivatePopover();
   }
 
   handleCloseAcceptClick(id) {
-    this.setState({
-      activePopover: null,
-    });
+    this.deactivatePopover(Tabs.POPOVER_CLOSE_QUESTION);
     this.props.onTabRemove(id);
   }
 
   handleConfigurationAcceptClick(id, newName) {
-    this.setState({
-      activePopover: null,
-    });
+    this.deactivatePopover(Tabs.POPOVER_CONFIGURATION);
     this.props.onTabRename(id, newName);
   }
 
@@ -108,7 +96,7 @@ class Tabs extends Component {
     return children;
   }
 
-  renderPopover(id, child) {
+  renderPopover(id, {tabName = ''}) {
     switch (this.state.popoverType) {
       case Tabs.POPOVER_CLOSE_QUESTION:
         return (
@@ -119,7 +107,7 @@ class Tabs extends Component {
       case Tabs.POPOVER_CONFIGURATION:
         return (
           <Configuration ref={component => this._activePopoverComponent = component}
-                         name={child.props.name}
+                         name={tabName}
                          onCancel={() => this.handleCancelClick(id)}
                          onAccept={newName => this.handleConfigurationAcceptClick(id, newName)}/>
         );
@@ -128,43 +116,95 @@ class Tabs extends Component {
     }
   }
 
-  renderTab = (child, id, onlyOneChild) => {
+  renderPopoverBlind(tabRef) {
+    // Might be null upon initial render
+    const tabId = this.state.popoverTabId;
+
+    let tabName = undefined;
+    if (tabRef !== undefined) {
+      tabName = tabRef.props.name;
+    }
+
     return (
-      <Popover key={id}
-               body={this.renderPopover(id, child)}
-               isOpen={this.state.activePopover === id}
+      <Popover key="popoverblind"
+               body={this.renderPopover(tabId, {tabName})}
+               isOpen={this.state.popoverIsActive}
                preferPlace="below">
-        {React.cloneElement(child, {
-          onClick: () => this.handleTabClick(id),
-          onConfigureClick: () => this.handleTabConfigureClick(id),
-          onCloseClick: () => this.handleTabCloseClick(id),
-          active: this.state.currentlyVisibleTabId === id,
-          disableClose: onlyOneChild,
-        })}
+        <li style={{
+          ...this.state.popoverBlindGeometry,
+          position: 'absolute',
+          visibility: 'hidden',
+          display: tabId === null ? 'none' : 'block',
+          zIndex: -1,
+        }}/>
       </Popover>
     );
+  }
+
+  renderTab = (child, id, onlyOneChild) => {
+    return React.cloneElement(child, {
+      key: id,
+      ref: reference => this._tabReferences.set(id, reference),
+      onClick: () => this.handleTabClick(id),
+      onConfigureClick: () => this.handleTabConfigureClick(id),
+      onCloseClick: () => this.handleTabCloseClick(id),
+      active: this.state.currentlyVisibleTabId === id,
+      disableClose: onlyOneChild,
+    });
   };
 
   render() {
+    this._tabReferences = new Map();
     const orderedChildren = this.bringChildrenIntoOrder(this.props.children);
+    const tabs = orderedChildren
+      .map(child => this.renderTab(
+        child,
+        child.props.id,
+        orderedChildren.length === 1
+      ));
 
     return (
       <ul className="tabs">
-        {
-          orderedChildren
-            .map(child => this.renderTab(
-              child,
-              child.props.id,
-              orderedChildren.length === 1
-            ))
-        }
-        <li className="action add"
+        {tabs}
+        <li key="action-add"
+            className="action add"
             onClick={this.props.onTabAdd}>
           <i className="fa fa-plus"/>
         </li>
+        {this.renderPopoverBlind(
+          tabs.find(tab => tab.props.id === this.state.popoverTabId)
+        )}
       </ul>
     );
   }
+
+  activatePopover(tabId, type) {
+    if (this.state.popoverIsActive) {
+      return;
+    }
+
+    this.setState({
+      popoverIsActive: true,
+      popoverTabId: tabId,
+      popoverType: type,
+      popoverBlindGeometry: getRelativeElementGeometry(
+        findDOMNode(
+          this._tabReferences.get(tabId)
+        )
+      ),
+    });
+  }
+
+  deactivatePopover(type = null) {
+    if (type !== null && this.state.popoverType !== type) {
+      return;
+    }
+
+    this.setState({
+      popoverIsActive: false,
+    });
+  }
+
 
   componentDidMount() {
     this.props.onTabActivate(this.state.currentlyVisibleTabId);
@@ -172,7 +212,11 @@ class Tabs extends Component {
 
   componentDidUpdate(previousProps, previousState) { /* eslint-disable-line no-unused-vars */
     if (
-      this.state.activePopover !== previousState.activePopover &&
+      (
+        this.state.popoverIsActive !== previousState.popoverIsActive ||
+        this.state.popoverTabId !== previousState.popoverTabId ||
+        this.state.popoverType !== previousState.popoverType
+      ) &&
       this._activePopoverComponent !== null
     ) {
       this._activePopoverComponent.onActivation();

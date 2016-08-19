@@ -61,9 +61,11 @@ class Configuration extends Popover {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({
-      newName: newProps.name
-    });
+    if (this.props.name !== newProps.name) {
+      this.setState({
+        newName: newProps.name
+      });
+    }
   }
 }
 
