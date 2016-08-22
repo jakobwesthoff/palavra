@@ -29,9 +29,9 @@ const loadedStateKeys = [
   'activeTab',
 ];
 
-migrations.run()
-  .then(() => {
-    chrome.storage.local.get(loadedStateKeys, storage => {
+window.__palavra_ready_ = migrations.run()
+  .then(() => new Promise(
+    (resolve, reject) => chrome.storage.local.get(loadedStateKeys, storage => {
       if (chrome.runtime.lastError !== undefined) {
         // @TODO: handle error
       }
@@ -50,5 +50,8 @@ migrations.run()
       wrapStore(store, {
         portName: 'Palavra',
       });
-    });
-  });
+
+      resolve();
+    })
+  )
+);

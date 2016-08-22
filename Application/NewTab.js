@@ -7,9 +7,7 @@ import {Store} from 'react-chrome-redux';
 
 import Palavra from 'Components/Palavra';
 
-
-// Make sure background is ready before running any init code
-chrome.runtime.getBackgroundPage(() => {
+function init() {
   const store = new Store({
     portName: 'Palavra',
   });
@@ -24,5 +22,10 @@ chrome.runtime.getBackgroundPage(() => {
       document.getElementById('palavra')
     );
   });
+}
+
+// Make sure background is ready before running any init code
+chrome.runtime.getBackgroundPage(bgWindow => {
+  bgWindow.__palavra_ready_.then(() => init());
 });
 
